@@ -56,12 +56,16 @@ def stats(data: dict) -> dict:
             "by_kind": Counter((t["kind"], t["outcome"]) for t in tests)}
 
 
-def evidence(test: dict, max_ex: int = 3) -> str:
+EVID_NOTE = {"en": "# {n} requests, status codes in order: {codes}\n",
+             "zh": "# 共 {n} 个请求，状态码依次为：{codes}\n"}
+
+
+def evidence(test: dict, lang: str = "en", max_ex: int = 3) -> str:
     ex = test["exchanges"]
     if len(ex) > max_ex:  # e.g. the 10-request brute-force test: show first and last, summarise the rest
         codes = " ".join(str(e["status"]) for e in ex)
         ex = [ex[0], ex[-1]]
-        note = f"# {len(test['exchanges'])} requests, status codes in order: {codes}\n"
+        note = EVID_NOTE[lang].format(n=len(test["exchanges"]), codes=codes)
     else:
         note = ""
     out = []
@@ -146,7 +150,7 @@ T = {
             "测试对象：Demo Shop API v1.0，测试时进程内运行（FastAPI TestClient）；curl 复现命令针对 `" + BASE + "`。",
             "依据：接口自身的文档（`docs/pricing-spec.md`），包括访问控制规则、金额计算规则、分页与登录锁定规则。",
             "测试角色：匿名用户、普通用户 `alice`、另一普通用户 `bob`、管理员 `admin`。",
-            "方法：(1) 以数据形式编写“角色 × 接口 × 方法”权限矩阵，并逐格生成测试；(2) 针对每类风险编写专项测试，对应 OWASP API Security Top 10（2023）；(3) 按定价规范编写参考实现，校验金额计算；(4) 响应结构、字段类型和边界值检查。每个测试都会记录真实的 HTTP 请求与响应，下文证据即直接引用这些记录。",
+            "方法：（1）以数据形式编写“角色 × 接口 × 方法”权限矩阵，并逐格生成测试；（2）针对每类风险编写专项测试，对应 OWASP API Security Top 10（2023）；（3）按定价规范编写参考实现，校验金额计算；（4）响应结构、字段类型和边界值检查。每个测试都会记录真实的 HTTP 请求与响应，下文证据即直接引用这些记录。",
             "不在本次范围内：压力/拒绝服务测试、基础设施与 TLS 配置、第三方服务。",
         ],
         "sev_hdr": "| 严重程度 | 数量 | 编号 |\n|---|---|---|",
@@ -172,8 +176,21 @@ def sev_label(sev: str, lang: str) -> str:
     return sev if lang == "en" else f"{SEV_ZH[sev]}（{sev}）"
 
 
+def clip(msg: str, n: int = 220) -> str:
+    return msg if len(msg) <= n else msg[:n].rstrip() + "…"
+
+
+def cart_label(test: dict, resp: dict) -> str:
+    """'3 × USB-C cable' from the order the API returned (falls back to the request's product ids)."""
+    items = resp.get("items") or [{"name": f"product {i['product_id']}", **i} for i in test["params"].get("items", [])]
+    return " + ".join(f"{i['quantity']} × {i['name']}" for i in items)
+
+
 def build(lang: str, v: dict, f: dict, vs: dict, fs: dict) -> str:
     t = T[lang]
+    zh = lang == "zh"
+    colon = "：" if zh else ":"  # full-width punctuation in the Chinese report
+    paren = (lambda s: f"（{s}）") if zh else (lambda s: f" ({s})")  # noqa: E731
     date = dt.date.today().isoformat()
     ok = lambda o: t["pass"] if o == "passed" else t["fail"]  # noqa: E731
     order = sorted(vs["open"].values(), key=lambda x: (SEVERITIES.index(x["severity"]), x["id"]))
@@ -194,27 +211,27 @@ def build(lang: str, v: dict, f: dict, vs: dict, fs: dict) -> str:
         fixed_fd = fs["findings"][fd["id"]]
         nk, nn = len(fixed_fd["failed"]), len(fixed_fd["tests"])
         L += [f"### {fd['id']} - {c['title'][lang]}", "",
-              f"- **{t['f_sev']}:** {sev_label(fd['severity'], lang)}",
-              f"- **{t['f_owasp']}:** {fd['owasp']}",
-              f"- **{t['f_endpoint']}:** `{c['endpoint']}`",
-              f"- **{t['f_scen']}:** {c['scenario'][lang]}",
-              f"- **{t['f_tests']}:** {len(fd['failed'])}/{len(fd['tests'])} (" + ", ".join(f"`{x['name']}`" for x in fd["failed"]) + ")",
+              f"- **{t['f_sev']}{colon}** {sev_label(fd['severity'], lang)}",
+              f"- **{t['f_owasp']}{colon}** {c.get('category', {}).get(lang, fd['owasp'])}",
+              f"- **{t['f_endpoint']}{colon}** `{c['endpoint']}`",
+              f"- **{t['f_scen']}{colon}** {c['scenario'][lang]}",
+              f"- **{t['f_tests']}{colon}** {len(fd['failed'])}/{len(fd['tests'])}" + paren(", ".join(f"`{x['name']}`" for x in fd["failed"])),
               "", f"**{t['f_repro']}**", "", "```bash", c["curl"], "```", "",
               f"**{t['f_evid']}**", ""]
         for ft in fd["failed"][: (1 if fd["id"] == "F6" else 2)]:
-            L += [f"`{ft['name']}`:", "", "```http", evidence(ft), "```", "", f"> {ft['message'][:220]}", ""]
+            L += [f"`{ft['name']}`{colon}", "", "```http", evidence(ft, lang), "```", "", f"> {clip(ft['message'])}", ""]
         if fd["id"] == "F6":
             L += [t["acc_hdr"]]
             for ft in fd["failed"]:
                 resp = json.loads(ft["exchanges"][-1]["body"])
                 spec = ft["message"].split("spec ")[-1].split()[0]
                 diff = (int(resp["total"].replace(".", "")) - int(spec.replace(".", ""))) / 100
-                L.append(f"| `{ft['params'].get('items')}` | {resp['subtotal']} | {spec} | {resp['total']} | {diff:+.2f} |")
+                L.append(f"| {cart_label(ft, resp)} | {resp['subtotal']} | {spec} | {resp['total']} | {diff:+.2f} |")
             L.append("")
         L += [
-              f"**{t['f_impact']}:** {c['impact'][lang]}", "",
-              f"**{t['f_fix']}:** {c['fix'][lang]}", "", "```python", c["snippet"], "```", "",
-              f"**{t['f_retest']}:** " + (t["retest_ok"].format(n=nn) if nk == 0 else t["retest_bad"].format(k=nk, n=nn)), ""]
+              f"**{t['f_impact']}{colon}** {c['impact'][lang]}", "",
+              f"**{t['f_fix']}{colon}** {c['fix'][lang]}", "", "```python", c["snippet"], "```", "",
+              f"**{t['f_retest']}{colon}** " + (t["retest_ok"].format(n=nn) if nk == 0 else t["retest_bad"].format(k=nk, n=nn)), ""]
     rows = matrix_rows(v, f)
     L += [f"## 5. {t['matrix']}", "", t["m_sum"].format(n=len(rows), vf=sum(r[5] != "passed" for r in rows), ff=sum(r[7] != "passed" for r in rows)), "", t["m_hdr"]]
     for role, method, path, exp, va, vo, fa, fo in rows:

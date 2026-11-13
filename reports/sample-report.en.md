@@ -5,8 +5,8 @@
 ## 1. Summary
 
 - Tests executed: **49** (22 permission-matrix cells, 12 security/accuracy checks, 15 functional/format checks).
-- Vulnerable build: **17 failed / 32 passed** in 0.58 s, giving **7 distinct findings**: 3 Critical, 2 High, 2 Medium, 0 Low.
-- Fixed build: **0 failed / 49 passed** in 0.56 s. Open findings after fix: **0**.
+- Vulnerable build: **17 failed / 32 passed** in 0.53 s, giving **7 distinct findings**: 3 Critical, 2 High, 2 Medium, 0 Low.
+- Fixed build: **0 failed / 49 passed** in 0.60 s. Open findings after fix: **0**.
 - Most urgent: unauthenticated SQL injection (F4), self-service privilege escalation (F3) and admin routes open to every user (F2). Together they allow full takeover without any special access.
 
 ## 2. Scope and method
@@ -153,7 +153,7 @@ curl -s -G http://127.0.0.1:8000/products --data-urlencode "search=zzz' UNION SE
 < [{"id":1,"name":"alice:6198f50cba51030c361ff55c6c2c32928f09ff71144cda86a1e22ff5d664b7fd","price":"0.00","stock":0},{"id":2,"name":"bob:7df25982c15c54e4067025d5e0de9f3ff26d289b980752883646666a706e133a","price":"0.00","stock":0},{"id":3,"name":"admin:5eedc43e05a907377fb402da8d59d48af0115cb9528cdc1e0987765837e758a9","price":"0.00","stock":0}]
 ```
 
-> injection returned rows: ['alice:6198f50cba51030c361ff55c6c2c32928f09ff71144cda86a1e22ff5d664b7fd', 'bob:7df25982c15c54e4067025d5e0de9f3ff26d289b980752883646666a706e133a', 'admin:5eedc43e05a907377fb402da8d59d48af0115cb95
+> injection returned rows: ['alice:6198f50cba51030c361ff55c6c2c32928f09ff71144cda86a1e22ff5d664b7fd', 'bob:7df25982c15c54e4067025d5e0de9f3ff26d289b980752883646666a706e133a', 'admin:5eedc43e05a907377fb402da8d59d48af0115cb95…
 
 `test_sqli_quote_in_search_is_handled`:
 
@@ -247,9 +247,9 @@ curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: applica
 
 | Cart (SAVE10) | Subtotal | Spec total | API total | Difference |
 |---|---|---|---|---|
-| `[{'product_id': 1, 'quantity': 3}]` | 29.97 | 26.97 | 24.28 | -2.69 |
-| `[{'product_id': 3, 'quantity': 2}, {'product_id': 1, 'quantity': 1}]` | 49.97 | 44.97 | 40.48 | -4.49 |
-| `[{'product_id': 2, 'quantity': 3}]` | 149.85 | 134.86 | 121.38 | -13.48 |
+| 3 × USB-C cable | 29.97 | 26.97 | 24.28 | -2.69 |
+| 2 × Wireless mouse + 1 × USB-C cable | 49.97 | 44.97 | 40.48 | -4.49 |
+| 3 × Mechanical keyboard | 149.85 | 134.86 | 121.38 | -13.48 |
 
 **Impact:** Every discounted order is under-charged by about 9% of the subtotal (19% off instead of 10%): direct revenue loss and totals that do not reconcile with accounting.
 

@@ -1,12 +1,12 @@
 {
  "mode": "fixed",
- "duration_s": 0.56,
+ "duration_s": 0.6,
  "tests": [
   {
    "nodeid": "tests/test_functional.py::test_products_schema_and_types",
    "name": "test_products_schema_and_types",
    "outcome": "passed",
-   "duration": 0.0032,
+   "duration": 0.0045,
    "finding": null,
    "kind": "functional",
    "params": {},
@@ -48,7 +48,7 @@
    "nodeid": "tests/test_functional.py::test_order_total_without_coupon",
    "name": "test_order_total_without_coupon",
    "outcome": "passed",
-   "duration": 0.0031,
+   "duration": 0.0033,
    "finding": null,
    "kind": "functional",
    "params": {},
@@ -76,7 +76,7 @@
    "nodeid": "tests/test_functional.py::test_order_quantity_boundaries_rejected[-1]",
    "name": "test_order_quantity_boundaries_rejected[-1]",
    "outcome": "passed",
-   "duration": 0.004,
+   "duration": 0.0038,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -106,7 +106,7 @@
    "nodeid": "tests/test_functional.py::test_order_quantity_boundaries_rejected[0]",
    "name": "test_order_quantity_boundaries_rejected[0]",
    "outcome": "passed",
-   "duration": 0.003,
+   "duration": 0.0036,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -166,7 +166,7 @@
    "nodeid": "tests/test_functional.py::test_order_quantity_boundaries_rejected[2147483648]",
    "name": "test_order_quantity_boundaries_rejected[2147483648]",
    "outcome": "passed",
-   "duration": 0.0028,
+   "duration": 0.0041,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -196,7 +196,7 @@
    "nodeid": "tests/test_functional.py::test_page_size_boundaries[1-200]",
    "name": "test_page_size_boundaries[1-200]",
    "outcome": "passed",
-   "duration": 0.0029,
+   "duration": 0.0043,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -220,7 +220,7 @@
    "nodeid": "tests/test_functional.py::test_page_size_boundaries[100-200]",
    "name": "test_page_size_boundaries[100-200]",
    "outcome": "passed",
-   "duration": 0.0028,
+   "duration": 0.0035,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -244,7 +244,7 @@
    "nodeid": "tests/test_functional.py::test_page_size_boundaries[0-422]",
    "name": "test_page_size_boundaries[0-422]",
    "outcome": "passed",
-   "duration": 0.0024,
+   "duration": 0.0028,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -268,7 +268,7 @@
    "nodeid": "tests/test_functional.py::test_page_size_boundaries[101-422]",
    "name": "test_page_size_boundaries[101-422]",
    "outcome": "passed",
-   "duration": 0.0022,
+   "duration": 0.0031,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -292,7 +292,7 @@
    "nodeid": "tests/test_functional.py::test_page_size_boundaries[1000000-422]",
    "name": "test_page_size_boundaries[1000000-422]",
    "outcome": "passed",
-   "duration": 0.0021,
+   "duration": 0.0031,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -316,7 +316,7 @@
    "nodeid": "tests/test_functional.py::test_unknown_product_and_coupon",
    "name": "test_unknown_product_and_coupon",
    "outcome": "passed",
-   "duration": 0.0053,
+   "duration": 0.0077,
    "finding": null,
    "kind": "functional",
    "params": {},
@@ -360,7 +360,7 @@
    "nodeid": "tests/test_functional.py::test_invalid_ids_and_tokens",
    "name": "test_invalid_ids_and_tokens",
    "outcome": "passed",
-   "duration": 0.0091,
+   "duration": 0.0106,
    "finding": null,
    "kind": "functional",
    "params": {},
@@ -405,7 +405,7 @@
    "nodeid": "tests/test_functional.py::test_successful_login_returns_token",
    "name": "test_successful_login_returns_token",
    "outcome": "passed",
-   "duration": 0.0053,
+   "duration": 0.0056,
    "finding": null,
    "kind": "functional",
    "params": {},
@@ -437,7 +437,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/products]",
    "name": "test_permission_matrix[anonymous-GET-/products]",
    "outcome": "passed",
-   "duration": 0.0028,
+   "duration": 0.0031,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -464,7 +464,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/products]",
    "name": "test_permission_matrix[alice-GET-/products]",
    "outcome": "passed",
-   "duration": 0.0031,
+   "duration": 0.0028,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -491,7 +491,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/users/me]",
    "name": "test_permission_matrix[anonymous-GET-/users/me]",
    "outcome": "passed",
-   "duration": 0.0026,
+   "duration": 0.003,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -518,7 +518,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/users/me]",
    "name": "test_permission_matrix[alice-GET-/users/me]",
    "outcome": "passed",
-   "duration": 0.0033,
+   "duration": 0.0027,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -576,7 +576,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-PATCH-/users/me]",
    "name": "test_permission_matrix[alice-PATCH-/users/me]",
    "outcome": "passed",
-   "duration": 0.0031,
+   "duration": 0.0032,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -634,7 +634,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders]",
    "name": "test_permission_matrix[alice-GET-/orders]",
    "outcome": "passed",
-   "duration": 0.0034,
+   "duration": 0.004,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -661,7 +661,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-POST-/orders]",
    "name": "test_permission_matrix[anonymous-POST-/orders]",
    "outcome": "passed",
-   "duration": 0.0031,
+   "duration": 0.0032,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -702,7 +702,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-POST-/orders]",
    "name": "test_permission_matrix[alice-POST-/orders]",
    "outcome": "passed",
-   "duration": 0.0038,
+   "duration": 0.004,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -743,7 +743,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/orders/1]",
    "name": "test_permission_matrix[anonymous-GET-/orders/1]",
    "outcome": "passed",
-   "duration": 0.0028,
+   "duration": 0.0026,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -770,7 +770,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders/1]",
    "name": "test_permission_matrix[alice-GET-/orders/1]",
    "outcome": "passed",
-   "duration": 0.0035,
+   "duration": 0.0028,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -797,7 +797,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/orders/1]",
    "name": "test_permission_matrix[bob-GET-/orders/1]",
    "outcome": "passed",
-   "duration": 0.003,
+   "duration": 0.0027,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -824,7 +824,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders/2]",
    "name": "test_permission_matrix[alice-GET-/orders/2]",
    "outcome": "passed",
-   "duration": 0.0029,
+   "duration": 0.0024,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -878,7 +878,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/admin/users]",
    "name": "test_permission_matrix[anonymous-GET-/admin/users]",
    "outcome": "passed",
-   "duration": 0.0022,
+   "duration": 0.0028,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -905,7 +905,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/admin/users]",
    "name": "test_permission_matrix[alice-GET-/admin/users]",
    "outcome": "passed",
-   "duration": 0.0024,
+   "duration": 0.003,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -932,7 +932,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/admin/users]",
    "name": "test_permission_matrix[bob-GET-/admin/users]",
    "outcome": "passed",
-   "duration": 0.0027,
+   "duration": 0.0029,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -959,7 +959,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[admin-GET-/admin/users]",
    "name": "test_permission_matrix[admin-GET-/admin/users]",
    "outcome": "passed",
-   "duration": 0.0026,
+   "duration": 0.0029,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -986,7 +986,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-POST-/admin/products]",
    "name": "test_permission_matrix[anonymous-POST-/admin/products]",
    "outcome": "passed",
-   "duration": 0.0025,
+   "duration": 0.003,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -1021,7 +1021,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-POST-/admin/products]",
    "name": "test_permission_matrix[alice-POST-/admin/products]",
    "outcome": "passed",
-   "duration": 0.0028,
+   "duration": 0.0027,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -1056,7 +1056,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[admin-POST-/admin/products]",
    "name": "test_permission_matrix[admin-POST-/admin/products]",
    "outcome": "passed",
-   "duration": 0.0032,
+   "duration": 0.0042,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -1091,7 +1091,7 @@
    "nodeid": "tests/test_security_findings.py::test_bola_user_cannot_read_other_users_order",
    "name": "test_bola_user_cannot_read_other_users_order",
    "outcome": "passed",
-   "duration": 0.0029,
+   "duration": 0.0027,
    "finding": {
     "id": "F1",
     "severity": "High",
@@ -1116,7 +1116,7 @@
    "nodeid": "tests/test_security_findings.py::test_bfla_normal_user_cannot_list_all_users",
    "name": "test_bfla_normal_user_cannot_list_all_users",
    "outcome": "passed",
-   "duration": 0.0028,
+   "duration": 0.0026,
    "finding": {
     "id": "F2",
     "severity": "Critical",
@@ -1141,7 +1141,7 @@
    "nodeid": "tests/test_security_findings.py::test_bfla_normal_user_cannot_create_products",
    "name": "test_bfla_normal_user_cannot_create_products",
    "outcome": "passed",
-   "duration": 0.0027,
+   "duration": 0.0029,
    "finding": {
     "id": "F2",
     "severity": "Critical",
@@ -1170,7 +1170,7 @@
    "nodeid": "tests/test_security_findings.py::test_mass_assignment_cannot_set_role",
    "name": "test_mass_assignment_cannot_set_role",
    "outcome": "passed",
-   "duration": 0.0058,
+   "duration": 0.0048,
    "finding": {
     "id": "F3",
     "severity": "Critical",
@@ -1205,7 +1205,7 @@
    "nodeid": "tests/test_security_findings.py::test_sqli_union_in_product_search",
    "name": "test_sqli_union_in_product_search",
    "outcome": "passed",
-   "duration": 0.0029,
+   "duration": 0.0037,
    "finding": {
     "id": "F4",
     "severity": "Critical",
@@ -1255,7 +1255,7 @@
    "nodeid": "tests/test_security_findings.py::test_profile_does_not_expose_password_hash",
    "name": "test_profile_does_not_expose_password_hash",
    "outcome": "passed",
-   "duration": 0.0024,
+   "duration": 0.0028,
    "finding": {
     "id": "F5",
     "severity": "Medium",
@@ -1280,7 +1280,7 @@
    "nodeid": "tests/test_security_findings.py::test_admin_user_list_does_not_expose_password_hash",
    "name": "test_admin_user_list_does_not_expose_password_hash",
    "outcome": "passed",
-   "duration": 0.0029,
+   "duration": 0.0033,
    "finding": {
     "id": "F5",
     "severity": "Medium",
@@ -1409,7 +1409,7 @@
    "nodeid": "tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[keyboard-x3-half-up]",
    "name": "test_order_total_with_coupon_matches_spec[keyboard-x3-half-up]",
    "outcome": "passed",
-   "duration": 0.003,
+   "duration": 0.0036,
    "finding": {
     "id": "F6",
     "severity": "High",
@@ -1455,7 +1455,7 @@
    "nodeid": "tests/test_security_findings.py::test_login_locks_after_repeated_failures",
    "name": "test_login_locks_after_repeated_failures",
    "outcome": "passed",
-   "duration": 0.0208,
+   "duration": 0.0185,
    "finding": {
     "id": "F7",
     "severity": "Medium",

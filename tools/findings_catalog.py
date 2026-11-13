@@ -68,6 +68,7 @@ CATALOG = {
     },
     "F6": {
         "endpoint": "POST /orders",
+        "category": {"zh": "数据准确性（业务逻辑）——定价规范 Money 一节"},  # EN uses the test's own label
         "curl": "curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"items\":[{\"product_id\":1,\"quantity\":3}],\"coupon\":\"SAVE10\"}' http://127.0.0.1:8000/orders",
         "title": {"en": "Coupon discount applied twice; totals do not match the pricing spec",
                   "zh": "优惠券折扣被重复计算，订单金额与定价规范不符"},

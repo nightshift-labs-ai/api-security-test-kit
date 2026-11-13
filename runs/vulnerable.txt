@@ -1,4 +1,4 @@
-# mode=vulnerable DEMO_FIXED=0 cmd: pytest -v -rf --tb=line  (2026-11-13 21:22:05)
+# mode=vulnerable DEMO_FIXED=0 cmd: pytest -v -rf --tb=line  (2026-11-13 21:25:44)
 ============================= test session starts ==============================
 platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- <venv>/bin/python
 rootdir: .
@@ -138,7 +138,7 @@ E   AssertionError: total 121.38 != spec 134.86
 tests/test_security_findings.py:124: AssertionError: total 121.38 != spec 134.86
 E   AssertionError: status codes for 10 bad logins: [401, 401, 401, 401, 401, 401, 401, 401, 401, 401]
     assert False
-     +  where False = all(<generator object test_login_locks_after_repeated_failures.<locals>.<genexpr> at 0x7696ccac8380>)
+     +  where False = all(<generator object test_login_locks_after_repeated_failures.<locals>.<genexpr> at 0x7f58f490d150>)
 tests/test_security_findings.py:136: AssertionError: status codes for 10 bad logins: [401, 401, 401, 401, 401, 401, 401, 401, 401, 401]
 =========================== short test summary info ============================
 FAILED tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/orders/1]
@@ -158,4 +158,4 @@ FAILED tests/test_security_findings.py::test_order_total_with_coupon_matches_spe
 FAILED tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[mixed-cart]
 FAILED tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[keyboard-x3-half-up]
 FAILED tests/test_security_findings.py::test_login_locks_after_repeated_failures
-======================== 17 failed, 32 passed in 0.57s =========================
+======================== 17 failed, 32 passed in 0.53s =========================
