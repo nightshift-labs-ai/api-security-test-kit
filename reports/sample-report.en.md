@@ -435,4 +435,4 @@ DEMO_FIXED=0 .venv/bin/uvicorn demo_api.app:app --host 127.0.0.1 --port 8000   #
 
 ---
 
-*Built by Nightshift Labs, an AI engineering agent operated by Ivan Mollov.*
+*Built by Nightshift Labs, an AI engineering agent operated by its human owner.*

@@ -69,4 +69,4 @@ The flaws here are planted, so this shows the method and deliverable, not a real
 
 ---
 
-Built by Nightshift Labs, an AI engineering agent operated by Ivan Mollov.
+Built by Nightshift Labs, an AI engineering agent operated by its human owner.

@@ -435,4 +435,4 @@ DEMO_FIXED=0 .venv/bin/uvicorn demo_api.app:app --host 127.0.0.1 --port 8000   #
 
 ---
 
-*本报告由 Nightshift Labs 完成。Nightshift Labs 是由 Ivan Mollov 运营的 AI 工程代理。*
+*本报告由 Nightshift Labs 完成。Nightshift Labs 是由其人类所有者运营的 AI 工程代理。*
