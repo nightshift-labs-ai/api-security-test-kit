@@ -1,12 +1,12 @@
 {
  "mode": "vulnerable",
- "duration_s": 0.76,
+ "duration_s": 0.58,
  "tests": [
   {
    "nodeid": "tests/test_functional.py::test_products_schema_and_types",
    "name": "test_products_schema_and_types",
    "outcome": "passed",
-   "duration": 0.0051,
+   "duration": 0.0032,
    "finding": null,
    "kind": "functional",
    "params": {},
@@ -27,7 +27,7 @@
    "nodeid": "tests/test_functional.py::test_order_schema_and_types",
    "name": "test_order_schema_and_types",
    "outcome": "passed",
-   "duration": 0.0041,
+   "duration": 0.0028,
    "finding": null,
    "kind": "functional",
    "params": {},
@@ -48,7 +48,7 @@
    "nodeid": "tests/test_functional.py::test_order_total_without_coupon",
    "name": "test_order_total_without_coupon",
    "outcome": "passed",
-   "duration": 0.0054,
+   "duration": 0.003,
    "finding": null,
    "kind": "functional",
    "params": {},
@@ -76,7 +76,7 @@
    "nodeid": "tests/test_functional.py::test_order_quantity_boundaries_rejected[-1]",
    "name": "test_order_quantity_boundaries_rejected[-1]",
    "outcome": "passed",
-   "duration": 0.0038,
+   "duration": 0.003,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -106,7 +106,7 @@
    "nodeid": "tests/test_functional.py::test_order_quantity_boundaries_rejected[0]",
    "name": "test_order_quantity_boundaries_rejected[0]",
    "outcome": "passed",
-   "duration": 0.0038,
+   "duration": 0.0029,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -136,7 +136,7 @@
    "nodeid": "tests/test_functional.py::test_order_quantity_boundaries_rejected[101]",
    "name": "test_order_quantity_boundaries_rejected[101]",
    "outcome": "passed",
-   "duration": 0.0039,
+   "duration": 0.0028,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -166,7 +166,7 @@
    "nodeid": "tests/test_functional.py::test_order_quantity_boundaries_rejected[2147483648]",
    "name": "test_order_quantity_boundaries_rejected[2147483648]",
    "outcome": "passed",
-   "duration": 0.0037,
+   "duration": 0.003,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -196,7 +196,7 @@
    "nodeid": "tests/test_functional.py::test_page_size_boundaries[1-200]",
    "name": "test_page_size_boundaries[1-200]",
    "outcome": "passed",
-   "duration": 0.0038,
+   "duration": 0.0023,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -220,7 +220,7 @@
    "nodeid": "tests/test_functional.py::test_page_size_boundaries[100-200]",
    "name": "test_page_size_boundaries[100-200]",
    "outcome": "passed",
-   "duration": 0.004,
+   "duration": 0.0029,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -244,7 +244,7 @@
    "nodeid": "tests/test_functional.py::test_page_size_boundaries[0-422]",
    "name": "test_page_size_boundaries[0-422]",
    "outcome": "passed",
-   "duration": 0.0033,
+   "duration": 0.0021,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -268,7 +268,7 @@
    "nodeid": "tests/test_functional.py::test_page_size_boundaries[101-422]",
    "name": "test_page_size_boundaries[101-422]",
    "outcome": "passed",
-   "duration": 0.0033,
+   "duration": 0.0023,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -292,7 +292,7 @@
    "nodeid": "tests/test_functional.py::test_page_size_boundaries[1000000-422]",
    "name": "test_page_size_boundaries[1000000-422]",
    "outcome": "passed",
-   "duration": 0.0091,
+   "duration": 0.002,
    "finding": null,
    "kind": "functional",
    "params": {
@@ -316,7 +316,7 @@
    "nodeid": "tests/test_functional.py::test_unknown_product_and_coupon",
    "name": "test_unknown_product_and_coupon",
    "outcome": "passed",
-   "duration": 0.0084,
+   "duration": 0.0056,
    "finding": null,
    "kind": "functional",
    "params": {},
@@ -360,7 +360,7 @@
    "nodeid": "tests/test_functional.py::test_invalid_ids_and_tokens",
    "name": "test_invalid_ids_and_tokens",
    "outcome": "passed",
-   "duration": 0.016,
+   "duration": 0.009,
    "finding": null,
    "kind": "functional",
    "params": {},
@@ -405,7 +405,7 @@
    "nodeid": "tests/test_functional.py::test_successful_login_returns_token",
    "name": "test_successful_login_returns_token",
    "outcome": "passed",
-   "duration": 0.0069,
+   "duration": 0.0048,
    "finding": null,
    "kind": "functional",
    "params": {},
@@ -437,7 +437,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/products]",
    "name": "test_permission_matrix[anonymous-GET-/products]",
    "outcome": "passed",
-   "duration": 0.0041,
+   "duration": 0.0028,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -447,7 +447,7 @@
     "body": null,
     "expected": 200
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -464,7 +464,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/products]",
    "name": "test_permission_matrix[alice-GET-/products]",
    "outcome": "passed",
-   "duration": 0.0036,
+   "duration": 0.0027,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -474,7 +474,7 @@
     "body": null,
     "expected": 200
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -491,7 +491,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/users/me]",
    "name": "test_permission_matrix[anonymous-GET-/users/me]",
    "outcome": "passed",
-   "duration": 0.0035,
+   "duration": 0.0028,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -501,7 +501,7 @@
     "body": null,
     "expected": 401
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -518,7 +518,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/users/me]",
    "name": "test_permission_matrix[alice-GET-/users/me]",
    "outcome": "passed",
-   "duration": 0.0034,
+   "duration": 0.0027,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -528,7 +528,7 @@
     "body": null,
     "expected": 200
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -545,7 +545,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-PATCH-/users/me]",
    "name": "test_permission_matrix[anonymous-PATCH-/users/me]",
    "outcome": "passed",
-   "duration": 0.0033,
+   "duration": 0.0027,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -557,7 +557,7 @@
     },
     "expected": 401
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -576,7 +576,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-PATCH-/users/me]",
    "name": "test_permission_matrix[alice-PATCH-/users/me]",
    "outcome": "passed",
-   "duration": 0.0039,
+   "duration": 0.003,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -588,7 +588,7 @@
     },
     "expected": 200
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -607,7 +607,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/orders]",
    "name": "test_permission_matrix[anonymous-GET-/orders]",
    "outcome": "passed",
-   "duration": 0.0037,
+   "duration": 0.0023,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -617,7 +617,7 @@
     "body": null,
     "expected": 401
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -634,7 +634,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders]",
    "name": "test_permission_matrix[alice-GET-/orders]",
    "outcome": "passed",
-   "duration": 0.0048,
+   "duration": 0.0025,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -644,7 +644,7 @@
     "body": null,
     "expected": 200
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -661,7 +661,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-POST-/orders]",
    "name": "test_permission_matrix[anonymous-POST-/orders]",
    "outcome": "passed",
-   "duration": 0.0037,
+   "duration": 0.0028,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -678,7 +678,7 @@
     },
     "expected": 401
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -702,7 +702,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-POST-/orders]",
    "name": "test_permission_matrix[alice-POST-/orders]",
    "outcome": "passed",
-   "duration": 0.0038,
+   "duration": 0.0029,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -719,7 +719,7 @@
     },
     "expected": 201
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -743,7 +743,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/orders/1]",
    "name": "test_permission_matrix[anonymous-GET-/orders/1]",
    "outcome": "passed",
-   "duration": 0.0031,
+   "duration": 0.0028,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -753,7 +753,7 @@
     "body": null,
     "expected": 401
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -770,7 +770,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders/1]",
    "name": "test_permission_matrix[alice-GET-/orders/1]",
    "outcome": "passed",
-   "duration": 0.0032,
+   "duration": 0.0026,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -780,7 +780,7 @@
     "body": null,
     "expected": 200
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -797,7 +797,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/orders/1]",
    "name": "test_permission_matrix[bob-GET-/orders/1]",
    "outcome": "failed",
-   "duration": 0.0088,
+   "duration": 0.0028,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -807,7 +807,7 @@
     "body": null,
     "expected": 404
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "bob GET /orders/1: expected 404, got 200",
    "exchanges": [
     {
@@ -824,7 +824,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders/2]",
    "name": "test_permission_matrix[alice-GET-/orders/2]",
    "outcome": "failed",
-   "duration": 0.0038,
+   "duration": 0.0024,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -834,7 +834,7 @@
     "body": null,
     "expected": 404
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "alice GET /orders/2: expected 404, got 200",
    "exchanges": [
     {
@@ -851,7 +851,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[admin-GET-/orders/1]",
    "name": "test_permission_matrix[admin-GET-/orders/1]",
    "outcome": "passed",
-   "duration": 0.0036,
+   "duration": 0.0024,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -861,7 +861,7 @@
     "body": null,
     "expected": 200
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -878,7 +878,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/admin/users]",
    "name": "test_permission_matrix[anonymous-GET-/admin/users]",
    "outcome": "passed",
-   "duration": 0.0028,
+   "duration": 0.0024,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -888,7 +888,7 @@
     "body": null,
     "expected": 401
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -905,7 +905,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/admin/users]",
    "name": "test_permission_matrix[alice-GET-/admin/users]",
    "outcome": "failed",
-   "duration": 0.0038,
+   "duration": 0.0032,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -915,7 +915,7 @@
     "body": null,
     "expected": 403
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "alice GET /admin/users: expected 403, got 200",
    "exchanges": [
     {
@@ -932,7 +932,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/admin/users]",
    "name": "test_permission_matrix[bob-GET-/admin/users]",
    "outcome": "failed",
-   "duration": 0.0042,
+   "duration": 0.0026,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -942,7 +942,7 @@
     "body": null,
     "expected": 403
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "bob GET /admin/users: expected 403, got 200",
    "exchanges": [
     {
@@ -959,7 +959,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[admin-GET-/admin/users]",
    "name": "test_permission_matrix[admin-GET-/admin/users]",
    "outcome": "passed",
-   "duration": 0.003,
+   "duration": 0.0027,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -969,7 +969,7 @@
     "body": null,
     "expected": 200
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -986,7 +986,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-POST-/admin/products]",
    "name": "test_permission_matrix[anonymous-POST-/admin/products]",
    "outcome": "passed",
-   "duration": 0.0038,
+   "duration": 0.0028,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -1000,7 +1000,7 @@
     },
     "expected": 401
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -1021,7 +1021,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-POST-/admin/products]",
    "name": "test_permission_matrix[alice-POST-/admin/products]",
    "outcome": "failed",
-   "duration": 0.004,
+   "duration": 0.0029,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -1035,7 +1035,7 @@
     },
     "expected": 403
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "alice POST /admin/products: expected 403, got 201",
    "exchanges": [
     {
@@ -1056,7 +1056,7 @@
    "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[admin-POST-/admin/products]",
    "name": "test_permission_matrix[admin-POST-/admin/products]",
    "outcome": "passed",
-   "duration": 0.0041,
+   "duration": 0.0029,
    "finding": null,
    "kind": "matrix",
    "params": {
@@ -1070,7 +1070,7 @@
     },
     "expected": 201
    },
-   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
    "message": "",
    "exchanges": [
     {
@@ -1091,7 +1091,7 @@
    "nodeid": "tests/test_security_findings.py::test_bola_user_cannot_read_other_users_order",
    "name": "test_bola_user_cannot_read_other_users_order",
    "outcome": "failed",
-   "duration": 0.0042,
+   "duration": 0.0027,
    "finding": {
     "id": "F1",
     "severity": "High",
@@ -1116,7 +1116,7 @@
    "nodeid": "tests/test_security_findings.py::test_bfla_normal_user_cannot_list_all_users",
    "name": "test_bfla_normal_user_cannot_list_all_users",
    "outcome": "failed",
-   "duration": 0.0034,
+   "duration": 0.0036,
    "finding": {
     "id": "F2",
     "severity": "Critical",
@@ -1141,7 +1141,7 @@
    "nodeid": "tests/test_security_findings.py::test_bfla_normal_user_cannot_create_products",
    "name": "test_bfla_normal_user_cannot_create_products",
    "outcome": "failed",
-   "duration": 0.0035,
+   "duration": 0.0042,
    "finding": {
     "id": "F2",
     "severity": "Critical",
@@ -1149,7 +1149,7 @@
    },
    "kind": "finding",
    "params": {},
-   "doc": "What: alice (role=user) calls the admin-only POST /admin/products.\n    Why: write access to the catalog lets any customer add or price products.\n    Severity: Critical\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"name\":\"x\",\"price\":\"0.01\",\"stock\":1}' http://127.0.0.1:8000/admin/products",
+   "doc": "What: alice (role=user) calls the admin-only POST /admin/products.\n    Why: write access to the catalog lets any customer add products at arbitrary prices.\n    Severity: Critical\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"name\":\"x\",\"price\":\"0.01\",\"stock\":1}' http://127.0.0.1:8000/admin/products",
    "message": "non-admin got HTTP 201 on POST /admin/products",
    "exchanges": [
     {
@@ -1170,7 +1170,7 @@
    "nodeid": "tests/test_security_findings.py::test_mass_assignment_cannot_set_role",
    "name": "test_mass_assignment_cannot_set_role",
    "outcome": "failed",
-   "duration": 0.0059,
+   "duration": 0.0054,
    "finding": {
     "id": "F3",
     "severity": "Critical",
@@ -1205,11 +1205,11 @@
    "nodeid": "tests/test_security_findings.py::test_sqli_union_in_product_search",
    "name": "test_sqli_union_in_product_search",
    "outcome": "failed",
-   "duration": 0.0036,
+   "duration": 0.0045,
    "finding": {
     "id": "F4",
     "severity": "Critical",
-    "owasp": "Injection (OWASP Top 10 A03:2021; API8:2023 Security Misconfiguration)"
+    "owasp": "Injection - OWASP Top 10 A05:2025 (A03:2021), CWE-89; no dedicated API Top 10 2023 category (was API8:2019)"
    },
    "kind": "finding",
    "params": {},
@@ -1230,11 +1230,11 @@
    "nodeid": "tests/test_security_findings.py::test_sqli_quote_in_search_is_handled",
    "name": "test_sqli_quote_in_search_is_handled",
    "outcome": "failed",
-   "duration": 0.0031,
+   "duration": 0.0023,
    "finding": {
     "id": "F4",
     "severity": "Critical",
-    "owasp": "Injection (OWASP Top 10 A03:2021; API8:2023 Security Misconfiguration)"
+    "owasp": "Injection (A05:2025, CWE-89) + verbose DB error: API8:2023 Security Misconfiguration (CWE-209)"
    },
    "kind": "finding",
    "params": {},
@@ -1255,7 +1255,7 @@
    "nodeid": "tests/test_security_findings.py::test_profile_does_not_expose_password_hash",
    "name": "test_profile_does_not_expose_password_hash",
    "outcome": "failed",
-   "duration": 0.0035,
+   "duration": 0.0026,
    "finding": {
     "id": "F5",
     "severity": "Medium",
@@ -1280,7 +1280,7 @@
    "nodeid": "tests/test_security_findings.py::test_admin_user_list_does_not_expose_password_hash",
    "name": "test_admin_user_list_does_not_expose_password_hash",
    "outcome": "failed",
-   "duration": 0.0091,
+   "duration": 0.003,
    "finding": {
     "id": "F5",
     "severity": "Medium",
@@ -1305,7 +1305,7 @@
    "nodeid": "tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[3x-cable]",
    "name": "test_order_total_with_coupon_matches_spec[3x-cable]",
    "outcome": "failed",
-   "duration": 0.0043,
+   "duration": 0.0035,
    "finding": {
     "id": "F6",
     "severity": "High",
@@ -1351,7 +1351,7 @@
    "nodeid": "tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[mixed-cart]",
    "name": "test_order_total_with_coupon_matches_spec[mixed-cart]",
    "outcome": "failed",
-   "duration": 0.0041,
+   "duration": 0.003,
    "finding": {
     "id": "F6",
     "severity": "High",
@@ -1406,10 +1406,10 @@
    ]
   },
   {
-   "nodeid": "tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[keyboard-half-cent]",
-   "name": "test_order_total_with_coupon_matches_spec[keyboard-half-cent]",
+   "nodeid": "tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[keyboard-x3-half-up]",
+   "name": "test_order_total_with_coupon_matches_spec[keyboard-x3-half-up]",
    "outcome": "failed",
-   "duration": 0.0041,
+   "duration": 0.0031,
    "finding": {
     "id": "F6",
     "severity": "High",
@@ -1420,18 +1420,18 @@
     "items": [
      {
       "product_id": 2,
-      "quantity": 1
+      "quantity": 3
      }
     ],
     "lines": [
      [
       "49.95",
-      1
+      3
      ]
     ]
    },
    "doc": "What: POST /orders with coupon SAVE10; compare total with the spec (10% off subtotal once, half-up).\n    Why: wrong totals mean customers are over/under-charged on every discounted order, a direct revenue and compliance problem.\n    Severity: High\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"items\":[{\"product_id\":1,\"quantity\":3}],\"coupon\":\"SAVE10\"}' http://127.0.0.1:8000/orders",
-   "message": "total 40.46 != spec 44.95",
+   "message": "total 121.38 != spec 134.86",
    "exchanges": [
     {
      "method": "POST",
@@ -1441,13 +1441,13 @@
       "items": [
        {
         "product_id": 2,
-        "quantity": 1
+        "quantity": 3
        }
       ],
       "coupon": "SAVE10"
      },
      "status": 201,
-     "body": "{\"id\":3,\"user_id\":1,\"items\":[{\"product_id\":2,\"name\":\"Mechanical keyboard\",\"quantity\":1,\"unit_price\":\"49.95\"}],\"coupon\":\"SAVE10\",\"subtotal\":\"49.95\",\"discount\":\"9.49\",\"total\":\"40.46\",\"status\":\"pending\"}"
+     "body": "{\"id\":3,\"user_id\":1,\"items\":[{\"product_id\":2,\"name\":\"Mechanical keyboard\",\"quantity\":3,\"unit_price\":\"49.95\"}],\"coupon\":\"SAVE10\",\"subtotal\":\"149.85\",\"discount\":\"28.47\",\"total\":\"121.38\",\"status\":\"pending\"}"
     }
    ]
   },
@@ -1455,11 +1455,11 @@
    "nodeid": "tests/test_security_findings.py::test_login_locks_after_repeated_failures",
    "name": "test_login_locks_after_repeated_failures",
    "outcome": "failed",
-   "duration": 0.0296,
+   "duration": 0.0426,
    "finding": {
     "id": "F7",
     "severity": "Medium",
-    "owasp": "API4:2023 Unrestricted Resource Consumption (no login throttling)"
+    "owasp": "API2:2023 Broken Authentication (no brute-force protection / account lockout)"
    },
    "kind": "finding",
    "params": {},

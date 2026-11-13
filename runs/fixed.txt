@@ -1,7 +1,7 @@
-# mode=fixed DEMO_FIXED=1 cmd: pytest -v -rf --tb=line  (2026-11-13 21:13:53)
+# mode=fixed DEMO_FIXED=1 cmd: pytest -v -rf --tb=line  (2026-11-13 21:22:06)
 ============================= test session starts ==============================
-platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /home/agent/tools/apisec-venv/bin/python
-rootdir: /home/agent/claude-money/projects/client-jobs/api-sectest-kit
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- <venv>/bin/python
+rootdir: .
 configfile: pytest.ini
 testpaths: tests
 plugins: anyio-4.16.0
@@ -54,7 +54,7 @@ tests/test_security_findings.py::test_profile_does_not_expose_password_hash PASS
 tests/test_security_findings.py::test_admin_user_list_does_not_expose_password_hash PASSED [ 91%]
 tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[3x-cable] PASSED [ 93%]
 tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[mixed-cart] PASSED [ 95%]
-tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[keyboard-half-cent] PASSED [ 97%]
+tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[keyboard-x3-half-up] PASSED [ 97%]
 tests/test_security_findings.py::test_login_locks_after_repeated_failures PASSED [100%]
 
-============================== 49 passed in 0.79s ==============================
+============================== 49 passed in 0.55s ==============================

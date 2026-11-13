@@ -11,7 +11,7 @@
   "Low": 0
  },
  "runtime_s": {
-  "vulnerable": 0.76,
-  "fixed": 0.8
+  "vulnerable": "0.58",
+  "fixed": "0.56"
  }
 }

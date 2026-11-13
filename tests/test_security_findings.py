@@ -31,7 +31,7 @@ def test_bfla_normal_user_cannot_list_all_users(api):
 @finding(id="F2", severity="Critical", owasp="API5:2023 Broken Function Level Authorization")
 def test_bfla_normal_user_cannot_create_products(api):
     """What: alice (role=user) calls the admin-only POST /admin/products.
-    Why: write access to the catalog lets any customer add or price products.
+    Why: write access to the catalog lets any customer add products at arbitrary prices.
     Severity: Critical
     Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{"name":"x","price":"0.01","stock":1}' http://127.0.0.1:8000/admin/products
     """
@@ -51,7 +51,7 @@ def test_mass_assignment_cannot_set_role(api):
     assert me["role"] == "user", f"role changed to {me['role']!r} via PATCH /users/me"
 
 
-@finding(id="F4", severity="Critical", owasp="Injection (OWASP Top 10 A03:2021; API8:2023 Security Misconfiguration)")
+@finding(id="F4", severity="Critical", owasp="Injection - OWASP Top 10 A05:2025 (A03:2021), CWE-89; no dedicated API Top 10 2023 category (was API8:2019)")
 def test_sqli_union_in_product_search(api):
     """What: GET /products?search= with a UNION SELECT payload that targets the users table.
     Why: the search string is pasted into SQL, so an anonymous caller can read any table (here: usernames and password hashes).
@@ -65,7 +65,7 @@ def test_sqli_union_in_product_search(api):
     assert names == [], f"injection returned rows: {names[:3]}"
 
 
-@finding(id="F4", severity="Critical", owasp="Injection (OWASP Top 10 A03:2021; API8:2023 Security Misconfiguration)")
+@finding(id="F4", severity="Critical", owasp="Injection (A05:2025, CWE-89) + verbose DB error: API8:2023 Security Misconfiguration (CWE-209)")
 def test_sqli_quote_in_search_is_handled(api):
     """What: GET /products?search=O'Reilly (a normal apostrophe).
     Why: a 500 with a raw database error on a quote is the classic sign of string-built SQL, and it leaks internals.
@@ -110,8 +110,8 @@ def _spec_total(lines, pct):
 @pytest.mark.parametrize("items,lines", [
     ([{"product_id": 1, "quantity": 3}], [("9.99", 3)]),
     ([{"product_id": 3, "quantity": 2}, {"product_id": 1, "quantity": 1}], [("19.99", 2), ("9.99", 1)]),
-    ([{"product_id": 2, "quantity": 1}], [("49.95", 1)]),
-], ids=["3x-cable", "mixed-cart", "keyboard-half-cent"])
+    ([{"product_id": 2, "quantity": 3}], [("49.95", 3)]),
+], ids=["3x-cable", "mixed-cart", "keyboard-x3-half-up"])
 def test_order_total_with_coupon_matches_spec(api, items, lines):
     """What: POST /orders with coupon SAVE10; compare total with the spec (10% off subtotal once, half-up).
     Why: wrong totals mean customers are over/under-charged on every discounted order, a direct revenue and compliance problem.
@@ -124,7 +124,7 @@ def test_order_total_with_coupon_matches_spec(api, items, lines):
     assert r.json()["total"] == expected, f"total {r.json()['total']} != spec {expected}"
 
 
-@finding(id="F7", severity="Medium", owasp="API4:2023 Unrestricted Resource Consumption (no login throttling)")
+@finding(id="F7", severity="Medium", owasp="API2:2023 Broken Authentication (no brute-force protection / account lockout)")
 def test_login_locks_after_repeated_failures(api):
     """What: 10 wrong passwords for alice on POST /login; from the 6th attempt the API must answer 429.
     Why: without throttling an attacker can guess passwords at full speed (credential stuffing / brute force).

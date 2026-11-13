@@ -10,7 +10,7 @@ from permission_matrix import MATRIX
 )
 def test_permission_matrix(api, role, method, path, body, expected):
     """What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).
-    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.
+    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); each cell in tests/permission_matrix.py (22 role/endpoint/method pairs taken from the spec's access rules) is checked, including negative cases.
     Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).
     Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>
     """

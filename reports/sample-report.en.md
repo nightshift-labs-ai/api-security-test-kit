@@ -5,8 +5,8 @@
 ## 1. Summary
 
 - Tests executed: **49** (22 permission-matrix cells, 12 security/accuracy checks, 15 functional/format checks).
-- Vulnerable build: **17 failed / 32 passed** in 0.76 s, giving **7 distinct findings**: 3 Critical, 2 High, 2 Medium, 0 Low.
-- Fixed build: **0 failed / 49 passed** in 0.8 s. Open findings after fix: **0**.
+- Vulnerable build: **17 failed / 32 passed** in 0.58 s, giving **7 distinct findings**: 3 Critical, 2 High, 2 Medium, 0 Low.
+- Fixed build: **0 failed / 49 passed** in 0.56 s. Open findings after fix: **0**.
 - Most urgent: unauthenticated SQL injection (F4), self-service privilege escalation (F3) and admin routes open to every user (F2). Together they allow full takeover without any special access.
 
 ## 2. Scope and method
@@ -68,7 +68,7 @@ curl -s -H 'Authorization: Bearer alice-token' http://127.0.0.1:8000/admin/users
 
 > non-admin got HTTP 201 on POST /admin/products
 
-**Impact:** Any customer can list all accounts (including the admin) and change the product catalog and prices.
+**Impact:** Any customer can list all accounts, including the admin and every password hash, and add products at any price to the catalog.
 
 **Fix:** Enforce the role in one shared dependency used by every /admin route, deny by default.
 
@@ -132,7 +132,7 @@ class ProfileUpdate(BaseModel):
 ### F4 - SQL injection in product search (unauthenticated)
 
 - **Severity:** Critical
-- **Category:** Injection (OWASP Top 10 A03:2021; API8:2023 Security Misconfiguration)
+- **Category:** Injection - OWASP Top 10 A05:2025 (A03:2021), CWE-89; no dedicated API Top 10 2023 category (was API8:2019)
 - **Endpoint:** `GET /products?search=`
 - **Scenario:** Anonymous request with a UNION SELECT payload in `search`; also a plain apostrophe (O'Reilly).
 - **Failing tests:** 2/2 (`test_sqli_union_in_product_search`, `test_sqli_quote_in_search_is_handled`)
@@ -223,7 +223,7 @@ if order is None or (order.user_id != user.id and user.role != "admin"):
 - **Category:** Data accuracy (business logic) - pricing spec section 'Money'
 - **Endpoint:** `POST /orders`
 - **Scenario:** Create orders with coupon SAVE10 and compare `total` with docs/pricing-spec.md (10% off the subtotal once, rounded half up).
-- **Failing tests:** 3/3 (`test_order_total_with_coupon_matches_spec[3x-cable]`, `test_order_total_with_coupon_matches_spec[mixed-cart]`, `test_order_total_with_coupon_matches_spec[keyboard-half-cent]`)
+- **Failing tests:** 3/3 (`test_order_total_with_coupon_matches_spec[3x-cable]`, `test_order_total_with_coupon_matches_spec[mixed-cart]`, `test_order_total_with_coupon_matches_spec[keyboard-x3-half-up]`)
 
 **Repro (curl)**
 
@@ -249,7 +249,7 @@ curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: applica
 |---|---|---|---|---|
 | `[{'product_id': 1, 'quantity': 3}]` | 29.97 | 26.97 | 24.28 | -2.69 |
 | `[{'product_id': 3, 'quantity': 2}, {'product_id': 1, 'quantity': 1}]` | 49.97 | 44.97 | 40.48 | -4.49 |
-| `[{'product_id': 2, 'quantity': 1}]` | 49.95 | 44.95 | 40.46 | -4.49 |
+| `[{'product_id': 2, 'quantity': 3}]` | 149.85 | 134.86 | 121.38 | -13.48 |
 
 **Impact:** Every discounted order is under-charged by about 9% of the subtotal (19% off instead of 10%): direct revenue loss and totals that do not reconcile with accounting.
 
@@ -321,7 +321,7 @@ class UserOut(BaseModel):
 ### F7 - No login throttling or account lockout
 
 - **Severity:** Medium
-- **Category:** API4:2023 Unrestricted Resource Consumption (no login throttling)
+- **Category:** API2:2023 Broken Authentication (no brute-force protection / account lockout)
 - **Endpoint:** `POST /login`
 - **Scenario:** Send 10 wrong passwords for alice in a row.
 - **Failing tests:** 1/1 (`test_login_locks_after_repeated_failures`)
@@ -428,7 +428,7 @@ Vulnerable build: 5 of 22 cells wrong. Fixed build: 0 of 22 cells wrong.
 ## 8. How to reproduce
 
 ```bash
-python -m venv .venv && .venv/bin/pip install fastapi uvicorn httpx pytest
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python tools/report.py            # runs both builds, rewrites this report
 DEMO_FIXED=0 .venv/bin/uvicorn demo_api.app:app --host 127.0.0.1 --port 8000   # then use the curl lines above
 ```

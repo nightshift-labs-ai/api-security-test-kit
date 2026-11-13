@@ -5,8 +5,8 @@
 ## 1. 概要
 
 - 共执行测试 **49** 项（权限矩阵 22 项、安全/准确性专项 12 项、功能/格式检查 15 项）。
-- 有缺陷版本：**失败 17 项 / 通过 32 项**，耗时 0.76 秒，归并为 **7 个独立问题**：严重 3 个、高危 2 个、中危 2 个、低危 0 个。
-- 修复后版本：**失败 0 项 / 通过 49 项**，耗时 0.8 秒，遗留问题 **0** 个。
+- 有缺陷版本：**失败 17 项 / 通过 32 项**，耗时 0.58 秒，归并为 **7 个独立问题**：严重 3 个、高危 2 个、中危 2 个、低危 0 个。
+- 修复后版本：**失败 0 项 / 通过 49 项**，耗时 0.56 秒，遗留问题 **0** 个。
 - 最需优先处理：无需登录的 SQL 注入（F4）、用户可自行提权（F3）、管理员接口对所有用户开放（F2）。三者叠加，攻击者无需任何特殊权限即可完全接管系统。
 
 ## 2. 测试范围与方法
@@ -68,7 +68,7 @@ curl -s -H 'Authorization: Bearer alice-token' http://127.0.0.1:8000/admin/users
 
 > non-admin got HTTP 201 on POST /admin/products
 
-**影响:** 任何顾客都能拉取全部账号（包括管理员），还能新增商品、篡改价格。
+**影响:** 任何顾客都能拉取全部账号（包括管理员及其密码哈希），还能向商品目录随意新增商品并自定价格。
 
 **修复建议:** 在所有 /admin 路由共用的依赖中统一校验角色，默认拒绝。
 
@@ -132,7 +132,7 @@ class ProfileUpdate(BaseModel):
 ### F4 - 商品搜索存在 SQL 注入（无需登录）
 
 - **严重程度:** 严重（Critical）
-- **类别:** Injection (OWASP Top 10 A03:2021; API8:2023 Security Misconfiguration)
+- **类别:** Injection - OWASP Top 10 A05:2025 (A03:2021), CWE-89; no dedicated API Top 10 2023 category (was API8:2019)
 - **接口:** `GET /products?search=`
 - **测试场景:** 匿名请求，在 search 参数中放入 UNION SELECT 载荷；另测普通单引号（O'Reilly）。
 - **失败的测试:** 2/2 (`test_sqli_union_in_product_search`, `test_sqli_quote_in_search_is_handled`)
@@ -223,7 +223,7 @@ if order is None or (order.user_id != user.id and user.role != "admin"):
 - **类别:** Data accuracy (business logic) - pricing spec section 'Money'
 - **接口:** `POST /orders`
 - **测试场景:** 使用 SAVE10 优惠券下单，将返回的 total 与 docs/pricing-spec.md 对比（按小计打一次 9 折，四舍五入到分）。
-- **失败的测试:** 3/3 (`test_order_total_with_coupon_matches_spec[3x-cable]`, `test_order_total_with_coupon_matches_spec[mixed-cart]`, `test_order_total_with_coupon_matches_spec[keyboard-half-cent]`)
+- **失败的测试:** 3/3 (`test_order_total_with_coupon_matches_spec[3x-cable]`, `test_order_total_with_coupon_matches_spec[mixed-cart]`, `test_order_total_with_coupon_matches_spec[keyboard-x3-half-up]`)
 
 **复现命令（curl）**
 
@@ -249,7 +249,7 @@ curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: applica
 |---|---|---|---|---|
 | `[{'product_id': 1, 'quantity': 3}]` | 29.97 | 26.97 | 24.28 | -2.69 |
 | `[{'product_id': 3, 'quantity': 2}, {'product_id': 1, 'quantity': 1}]` | 49.97 | 44.97 | 40.48 | -4.49 |
-| `[{'product_id': 2, 'quantity': 1}]` | 49.95 | 44.95 | 40.46 | -4.49 |
+| `[{'product_id': 2, 'quantity': 3}]` | 149.85 | 134.86 | 121.38 | -13.48 |
 
 **影响:** 每笔使用优惠券的订单都少收约小计的 9%（实际打了 81 折而非 9 折），直接造成收入损失，且账目无法对平。
 
@@ -321,7 +321,7 @@ class UserOut(BaseModel):
 ### F7 - 登录接口无频率限制、无账号锁定
 
 - **严重程度:** 中危（Medium）
-- **类别:** API4:2023 Unrestricted Resource Consumption (no login throttling)
+- **类别:** API2:2023 Broken Authentication (no brute-force protection / account lockout)
 - **接口:** `POST /login`
 - **测试场景:** 连续 10 次用错误密码登录 alice。
 - **失败的测试:** 1/1 (`test_login_locks_after_repeated_failures`)
@@ -428,7 +428,7 @@ if len(recent) >= 5:
 ## 8. 复现方法
 
 ```bash
-python -m venv .venv && .venv/bin/pip install fastapi uvicorn httpx pytest
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python tools/report.py            # 运行两个版本并重新生成本报告
 DEMO_FIXED=0 .venv/bin/uvicorn demo_api.app:app --host 127.0.0.1 --port 8000   # 启动后即可执行上文的 curl 命令
 ```

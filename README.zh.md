@@ -5,7 +5,7 @@
 ## 运行（3 条命令）
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install fastapi uvicorn httpx pytest
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt   # Python 3.10+
 .venv/bin/python tools/report.py          # 运行有缺陷版和修复版，生成 reports/ 与 runs/
 DEMO_FIXED=0 .venv/bin/uvicorn demo_api.app:app --host 127.0.0.1 --port 8000   # 启动接口，用于执行报告中的 curl 复现命令
 ```

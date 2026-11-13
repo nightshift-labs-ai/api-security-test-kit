@@ -5,7 +5,7 @@
 ## Run it (3 commands)
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install fastapi uvicorn httpx pytest
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt   # Python 3.10+
 .venv/bin/python tools/report.py          # runs vulnerable + fixed builds, writes reports/ and runs/
 DEMO_FIXED=0 .venv/bin/uvicorn demo_api.app:app --host 127.0.0.1 --port 8000   # live API for the curl repros
 ```
@@ -16,7 +16,7 @@ Example repro against the live server (from the report, finding F1):
 curl -s -H 'Authorization: Bearer bob-token' http://127.0.0.1:8000/orders/1   # bob reads alice's order
 ```
 
-The report's curl commands were checked against a live server (`runs/live-curl.txt`).
+Four of the report's curl commands (F1, F4, F6, F7) were run against a live server; the output is in `runs/live-curl.txt`.
 
 ## What is inside
 
@@ -42,7 +42,7 @@ Every test has a docstring with what it checks, why it matters, severity and rep
 | Failed | 17 | 0 |
 | Distinct findings | 7: 3 Critical, 2 High, 2 Medium, 0 Low | 0 |
 | Permission-matrix cells wrong | 5 of 22 | 0 of 22 |
-| Suite runtime | under 1 s (0.76 s) | under 1 s (0.80 s) |
+| Suite runtime | under 1 s (0.58 s) | under 1 s (0.56 s) |
 
 Findings: F2 BFLA on `/admin/*` (Critical), F3 mass assignment of `role` (Critical), F4 unauthenticated SQL injection in product search (Critical), F1 BOLA on `/orders/{id}` (High), F6 coupon discount applied twice: a 29.97 cart is charged 24.28 instead of 26.97 (High), F5 password hashes in user objects (Medium), F7 no login lockout (Medium).
 

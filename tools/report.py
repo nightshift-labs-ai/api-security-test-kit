@@ -32,7 +32,8 @@ def run(mode: str) -> dict:
     cmd = [sys.executable, "-m", "pytest", "-v", "-rf", "--tb=line"]
     p = subprocess.run(cmd, cwd=ROOT, env=env, capture_output=True, text=True, timeout=280)
     header = f"# mode={mode} DEMO_FIXED={env['DEMO_FIXED']} cmd: pytest -v -rf --tb=line  ({dt.datetime.now():%Y-%m-%d %H:%M:%S})\n"
-    (ROOT / "runs" / f"{mode}.txt").write_text(header + p.stdout + p.stderr)
+    out = (p.stdout + p.stderr).replace(str(ROOT) + "/", "").replace(str(ROOT), ".").replace(sys.prefix, "<venv>")
+    (ROOT / "runs" / f"{mode}.txt").write_text(header + out)
     data = json.loads((ROOT / "runs" / f"{mode}.json").read_text())
     data["exit_code"] = p.returncode
     return data
@@ -51,7 +52,7 @@ def stats(data: dict) -> dict:
     open_ = {k: v for k, v in findings.items() if v["failed"]}
     return {"total": len(tests), "failed": len(failed), "passed": len(tests) - len(failed),
             "findings": findings, "open": open_, "sev": Counter(v["severity"] for v in open_.values()),
-            "duration": data["duration_s"],
+            "duration": f"{data['duration_s']:.2f}",
             "by_kind": Counter((t["kind"], t["outcome"]) for t in tests)}
 
 
@@ -124,7 +125,7 @@ T = {
         "r_hdr": "| ID | Finding | Severity | Before fix | After fix |\n|---|---|---|---|---|",
         "r_tot": "| | **All tests** | | **{vf} failed / {n}** | **{ff} failed / {n}** |",
         "before": "{k}/{n} tests fail", "after_ok": "{n}/{n} pass", "after_bad": "{k}/{n} fail",
-        "repro_txt": "```bash\npython -m venv .venv && .venv/bin/pip install fastapi uvicorn httpx pytest\n.venv/bin/python tools/report.py            # runs both builds, rewrites this report\nDEMO_FIXED=0 .venv/bin/uvicorn demo_api.app:app --host 127.0.0.1 --port 8000   # then use the curl lines above\n```",
+        "repro_txt": "```bash\npython3 -m venv .venv && .venv/bin/pip install -r requirements.txt\n.venv/bin/python tools/report.py            # runs both builds, rewrites this report\nDEMO_FIXED=0 .venv/bin/uvicorn demo_api.app:app --host 127.0.0.1 --port 8000   # then use the curl lines above\n```",
         "footer": "Built by Nightshift Labs, an AI engineering agent operated by Ivan Mollov.",
         "pass": "PASS", "fail": "FAIL", "none": "-",
         "acc_hdr": "| Cart (SAVE10) | Subtotal | Spec total | API total | Difference |\n|---|---|---|---|---|",
@@ -159,7 +160,7 @@ T = {
         "r_hdr": "| 编号 | 问题 | 严重程度 | 修复前 | 修复后 |\n|---|---|---|---|---|",
         "r_tot": "| | **全部测试** | | **失败 {vf} / 共 {n}** | **失败 {ff} / 共 {n}** |",
         "before": "{k}/{n} 项失败", "after_ok": "{n}/{n} 项通过", "after_bad": "{k}/{n} 项失败",
-        "repro_txt": "```bash\npython -m venv .venv && .venv/bin/pip install fastapi uvicorn httpx pytest\n.venv/bin/python tools/report.py            # 运行两个版本并重新生成本报告\nDEMO_FIXED=0 .venv/bin/uvicorn demo_api.app:app --host 127.0.0.1 --port 8000   # 启动后即可执行上文的 curl 命令\n```",
+        "repro_txt": "```bash\npython3 -m venv .venv && .venv/bin/pip install -r requirements.txt\n.venv/bin/python tools/report.py            # 运行两个版本并重新生成本报告\nDEMO_FIXED=0 .venv/bin/uvicorn demo_api.app:app --host 127.0.0.1 --port 8000   # 启动后即可执行上文的 curl 命令\n```",
         "footer": "本报告由 Nightshift Labs 完成。Nightshift Labs 是由 Ivan Mollov 运营的 AI 工程代理。",
         "pass": "通过", "fail": "失败", "none": "-",
         "acc_hdr": "| 购物车（SAVE10） | 小计 | 规范应收 | 接口返回 | 差额 |\n|---|---|---|---|---|",
