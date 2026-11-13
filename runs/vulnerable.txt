@@ -1,0 +1,161 @@
+# mode=vulnerable DEMO_FIXED=0 cmd: pytest -v -rf --tb=line  (2026-11-13 21:13:51)
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /home/agent/tools/apisec-venv/bin/python
+rootdir: /home/agent/claude-money/projects/client-jobs/api-sectest-kit
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.16.0
+collecting ... collected 49 items
+
+tests/test_functional.py::test_products_schema_and_types PASSED          [  2%]
+tests/test_functional.py::test_order_schema_and_types PASSED             [  4%]
+tests/test_functional.py::test_order_total_without_coupon PASSED         [  6%]
+tests/test_functional.py::test_order_quantity_boundaries_rejected[-1] PASSED [  8%]
+tests/test_functional.py::test_order_quantity_boundaries_rejected[0] PASSED [ 10%]
+tests/test_functional.py::test_order_quantity_boundaries_rejected[101] PASSED [ 12%]
+tests/test_functional.py::test_order_quantity_boundaries_rejected[2147483648] PASSED [ 14%]
+tests/test_functional.py::test_page_size_boundaries[1-200] PASSED        [ 16%]
+tests/test_functional.py::test_page_size_boundaries[100-200] PASSED      [ 18%]
+tests/test_functional.py::test_page_size_boundaries[0-422] PASSED        [ 20%]
+tests/test_functional.py::test_page_size_boundaries[101-422] PASSED      [ 22%]
+tests/test_functional.py::test_page_size_boundaries[1000000-422] PASSED  [ 24%]
+tests/test_functional.py::test_unknown_product_and_coupon PASSED         [ 26%]
+tests/test_functional.py::test_invalid_ids_and_tokens PASSED             [ 28%]
+tests/test_functional.py::test_successful_login_returns_token PASSED     [ 30%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/products] PASSED [ 32%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/products] PASSED [ 34%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/users/me] PASSED [ 36%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/users/me] PASSED [ 38%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-PATCH-/users/me] PASSED [ 40%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-PATCH-/users/me] PASSED [ 42%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/orders] PASSED [ 44%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders] PASSED [ 46%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-POST-/orders] PASSED [ 48%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-POST-/orders] PASSED [ 51%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/orders/1] PASSED [ 53%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders/1] PASSED [ 55%]
+tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/orders/1] FAILED [ 57%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders/2] FAILED [ 59%]
+tests/test_permission_matrix.py::test_permission_matrix[admin-GET-/orders/1] PASSED [ 61%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/admin/users] PASSED [ 63%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/admin/users] FAILED [ 65%]
+tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/admin/users] FAILED [ 67%]
+tests/test_permission_matrix.py::test_permission_matrix[admin-GET-/admin/users] PASSED [ 69%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-POST-/admin/products] PASSED [ 71%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-POST-/admin/products] FAILED [ 73%]
+tests/test_permission_matrix.py::test_permission_matrix[admin-POST-/admin/products] PASSED [ 75%]
+tests/test_security_findings.py::test_bola_user_cannot_read_other_users_order FAILED [ 77%]
+tests/test_security_findings.py::test_bfla_normal_user_cannot_list_all_users FAILED [ 79%]
+tests/test_security_findings.py::test_bfla_normal_user_cannot_create_products FAILED [ 81%]
+tests/test_security_findings.py::test_mass_assignment_cannot_set_role FAILED [ 83%]
+tests/test_security_findings.py::test_sqli_union_in_product_search FAILED [ 85%]
+tests/test_security_findings.py::test_sqli_quote_in_search_is_handled FAILED [ 87%]
+tests/test_security_findings.py::test_profile_does_not_expose_password_hash FAILED [ 89%]
+tests/test_security_findings.py::test_admin_user_list_does_not_expose_password_hash FAILED [ 91%]
+tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[3x-cable] FAILED [ 93%]
+tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[mixed-cart] FAILED [ 95%]
+tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[keyboard-half-cent] FAILED [ 97%]
+tests/test_security_findings.py::test_login_locks_after_repeated_failures FAILED [100%]
+
+=================================== FAILURES ===================================
+E   AssertionError: bob GET /orders/1: expected 404, got 200
+    assert 200 == 404
+     +  where 200 = <Response [200 OK]>.status_code
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_permission_matrix.py:19: AssertionError: bob GET /orders/1: expected 404, got 200
+E   AssertionError: alice GET /orders/2: expected 404, got 200
+    assert 200 == 404
+     +  where 200 = <Response [200 OK]>.status_code
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_permission_matrix.py:19: AssertionError: alice GET /orders/2: expected 404, got 200
+E   AssertionError: alice GET /admin/users: expected 403, got 200
+    assert 200 == 403
+     +  where 200 = <Response [200 OK]>.status_code
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_permission_matrix.py:19: AssertionError: alice GET /admin/users: expected 403, got 200
+E   AssertionError: bob GET /admin/users: expected 403, got 200
+    assert 200 == 403
+     +  where 200 = <Response [200 OK]>.status_code
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_permission_matrix.py:19: AssertionError: bob GET /admin/users: expected 403, got 200
+E   AssertionError: alice POST /admin/products: expected 403, got 201
+    assert 201 == 403
+     +  where 201 = <Response [201 Created]>.status_code
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_permission_matrix.py:19: AssertionError: alice POST /admin/products: expected 403, got 201
+E   AssertionError: bob read alice's order: HTTP 200
+    assert 200 == 404
+     +  where 200 = <Response [200 OK]>.status_code
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:17: AssertionError: bob read alice's order: HTTP 200
+E   AssertionError: non-admin got HTTP 200 on /admin/users
+    assert 200 == 403
+     +  where 200 = <Response [200 OK]>.status_code
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:28: AssertionError: non-admin got HTTP 200 on /admin/users
+E   AssertionError: non-admin got HTTP 201 on POST /admin/products
+    assert 201 == 403
+     +  where 201 = <Response [201 Created]>.status_code
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:39: AssertionError: non-admin got HTTP 201 on POST /admin/products
+E   AssertionError: role changed to 'admin' via PATCH /users/me
+    assert 'admin' == 'user'
+      
+      - user
+      + admin
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:51: AssertionError: role changed to 'admin' via PATCH /users/me
+E   AssertionError: injection returned rows: ['alice:6198f50cba51030c361ff55c6c2c32928f09ff71144cda86a1e22ff5d664b7fd', 'bob:7df25982c15c54e4067025d5e0de9f3ff26d289b980752883646666a706e133a', 'admin:5eedc43e05a907377fb402da8d59d48af0115cb9528cdc1e0987765837e758a9']
+    assert ['alice:6198f...765837e758a9'] == []
+      
+      Left contains 3 more items, first extra item: 'alice:6198f50cba51030c361ff55c6c2c32928f09ff71144cda86a1e22ff5d664b7fd'
+      
+      Full diff: (-: missing in left side, +: extra in left side)
+      - []
+      + [
+      +     'alice:6198f50cba51030c361ff55c6c2c32928f09ff71144cda86a1e22ff5d664b7fd',...
+      
+      ...Full output truncated, use '-vv' to show
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:65: AssertionError: injection returned rows: ['alice:6198f50cba51030c361ff55c6c2c32928f09ff71144cda86a1e22ff5d664b7fd', 'bob:7df25982c15c54e4067025d5e0de9f3ff26d289b980752883646666a706e133a', 'admin:5eedc43e05a907377fb402da8d59d48af0115cb9528cdc1e0987765837e758a9']
+E   AssertionError: HTTP 500: {"detail":"database error: near \"Reilly\": syntax error"}
+    assert 500 == 200
+     +  where 500 = <Response [500 Internal Server Error]>.status_code
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:76: AssertionError: HTTP 500: {"detail":"database error: near \"Reilly\": syntax error"}
+E   AssertionError: password_hash present in /users/me
+    assert 'password_hash' not in {'id': 1, 'username': 'alice', 'email': 'alice@example.test', 'display_name': 'Alice', ...}
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:87: AssertionError: password_hash present in /users/me
+E   AssertionError: password_hash returned for: ['alice', 'bob', 'admin']
+    assert not ['alice', 'bob', 'admin']
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:99: AssertionError: password_hash returned for: ['alice', 'bob', 'admin']
+E   AssertionError: total 24.28 != spec 26.97
+    assert '24.28' == '26.97'
+      
+      - 26.97
+      + 24.28
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:124: AssertionError: total 24.28 != spec 26.97
+E   AssertionError: total 40.48 != spec 44.97
+    assert '40.48' == '44.97'
+      
+      - 44.97
+      + 40.48
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:124: AssertionError: total 40.48 != spec 44.97
+E   AssertionError: total 40.46 != spec 44.95
+    assert '40.46' == '44.95'
+      
+      - 44.95
+      + 40.46
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:124: AssertionError: total 40.46 != spec 44.95
+E   AssertionError: status codes for 10 bad logins: [401, 401, 401, 401, 401, 401, 401, 401, 401, 401]
+    assert False
+     +  where False = all(<generator object test_login_locks_after_repeated_failures.<locals>.<genexpr> at 0x751556e1d150>)
+/home/agent/claude-money/projects/client-jobs/api-sectest-kit/tests/test_security_findings.py:136: AssertionError: status codes for 10 bad logins: [401, 401, 401, 401, 401, 401, 401, 401, 401, 401]
+=========================== short test summary info ============================
+FAILED tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/orders/1]
+FAILED tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders/2]
+FAILED tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/admin/users]
+FAILED tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/admin/users]
+FAILED tests/test_permission_matrix.py::test_permission_matrix[alice-POST-/admin/products]
+FAILED tests/test_security_findings.py::test_bola_user_cannot_read_other_users_order
+FAILED tests/test_security_findings.py::test_bfla_normal_user_cannot_list_all_users
+FAILED tests/test_security_findings.py::test_bfla_normal_user_cannot_create_products
+FAILED tests/test_security_findings.py::test_mass_assignment_cannot_set_role
+FAILED tests/test_security_findings.py::test_sqli_union_in_product_search - A...
+FAILED tests/test_security_findings.py::test_sqli_quote_in_search_is_handled
+FAILED tests/test_security_findings.py::test_profile_does_not_expose_password_hash
+FAILED tests/test_security_findings.py::test_admin_user_list_does_not_expose_password_hash
+FAILED tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[3x-cable]
+FAILED tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[mixed-cart]
+FAILED tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[keyboard-half-cent]
+FAILED tests/test_security_findings.py::test_login_locks_after_repeated_failures
+======================== 17 failed, 32 passed in 0.75s =========================

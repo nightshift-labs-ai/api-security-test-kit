@@ -1,0 +1,1582 @@
+{
+ "mode": "fixed",
+ "duration_s": 0.8,
+ "tests": [
+  {
+   "nodeid": "tests/test_functional.py::test_products_schema_and_types",
+   "name": "test_products_schema_and_types",
+   "outcome": "passed",
+   "duration": 0.004,
+   "finding": null,
+   "kind": "functional",
+   "params": {},
+   "doc": "What: GET /products returns a list of {id:int, name:str, price:\"0.00\" string, stock:int>=0}.\n    Why: clients parse these fields; a wrong type or money format breaks checkout and reporting.\n    Severity: Medium if broken\n    Repro: curl -s http://127.0.0.1:8000/products",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/products",
+     "auth": null,
+     "json": null,
+     "status": 200,
+     "body": "[{\"id\":1,\"name\":\"USB-C cable\",\"price\":\"9.99\",\"stock\":120},{\"id\":2,\"name\":\"Mechanical keyboard\",\"price\":\"49.95\",\"stock\":15},{\"id\":3,\"name\":\"Wireless mouse\",\"price\":\"19.99\",\"stock\":40},{\"id\":4,\"name\":\"Laptop stand\",\"price\":\"34.50\",\"stock\":8}]"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_order_schema_and_types",
+   "name": "test_order_schema_and_types",
+   "outcome": "passed",
+   "duration": 0.0031,
+   "finding": null,
+   "kind": "functional",
+   "params": {},
+   "doc": "What: GET /orders/1 as owner returns the documented order shape with money as 2-decimal strings.\n    Why: schema drift silently breaks clients and finance exports.\n    Severity: Medium if broken\n    Repro: curl -s -H 'Authorization: Bearer alice-token' http://127.0.0.1:8000/orders/1",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/orders/1",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 200,
+     "body": "{\"id\":1,\"user_id\":1,\"items\":[{\"product_id\":3,\"name\":\"Wireless mouse\",\"quantity\":2,\"unit_price\":\"19.99\"}],\"coupon\":null,\"subtotal\":\"39.98\",\"discount\":\"0.00\",\"total\":\"39.98\",\"status\":\"paid\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_order_total_without_coupon",
+   "name": "test_order_total_without_coupon",
+   "outcome": "passed",
+   "duration": 0.0031,
+   "finding": null,
+   "kind": "functional",
+   "params": {},
+   "doc": "What: POST /orders 2 x mouse (19.99) with no coupon must total exactly 39.98 (control case).\n    Why: proves the pricing bug (if any) is in the discount path, not basic arithmetic.\n    Severity: High if broken\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"items\":[{\"product_id\":3,\"quantity\":2}]}' http://127.0.0.1:8000/orders",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": {
+      "items": [
+       {
+        "product_id": 3,
+        "quantity": 2
+       }
+      ]
+     },
+     "status": 201,
+     "body": "{\"id\":3,\"user_id\":1,\"items\":[{\"product_id\":3,\"name\":\"Wireless mouse\",\"quantity\":2,\"unit_price\":\"19.99\"}],\"coupon\":null,\"subtotal\":\"39.98\",\"discount\":\"0.00\",\"total\":\"39.98\",\"status\":\"pending\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_order_quantity_boundaries_rejected[-1]",
+   "name": "test_order_quantity_boundaries_rejected[-1]",
+   "outcome": "passed",
+   "duration": 0.0036,
+   "finding": null,
+   "kind": "functional",
+   "params": {
+    "qty": -1
+   },
+   "doc": "What: POST /orders with quantity outside 1..100 (negative, zero, 101, 2^31) must be rejected with 422.\n    Why: negative quantities create negative totals (refund fraud); huge ones overflow stock and totals.\n    Severity: High if broken\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"items\":[{\"product_id\":1,\"quantity\":-1}]}' http://127.0.0.1:8000/orders",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": {
+      "items": [
+       {
+        "product_id": 1,
+        "quantity": -1
+       }
+      ]
+     },
+     "status": 422,
+     "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"items\",0,\"quantity\"],\"msg\":\"Input should be greater than or equal to 1\",\"input\":-1,\"ctx\":{\"ge\":1}}]}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_order_quantity_boundaries_rejected[0]",
+   "name": "test_order_quantity_boundaries_rejected[0]",
+   "outcome": "passed",
+   "duration": 0.0038,
+   "finding": null,
+   "kind": "functional",
+   "params": {
+    "qty": 0
+   },
+   "doc": "What: POST /orders with quantity outside 1..100 (negative, zero, 101, 2^31) must be rejected with 422.\n    Why: negative quantities create negative totals (refund fraud); huge ones overflow stock and totals.\n    Severity: High if broken\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"items\":[{\"product_id\":1,\"quantity\":-1}]}' http://127.0.0.1:8000/orders",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": {
+      "items": [
+       {
+        "product_id": 1,
+        "quantity": 0
+       }
+      ]
+     },
+     "status": 422,
+     "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"items\",0,\"quantity\"],\"msg\":\"Input should be greater than or equal to 1\",\"input\":0,\"ctx\":{\"ge\":1}}]}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_order_quantity_boundaries_rejected[101]",
+   "name": "test_order_quantity_boundaries_rejected[101]",
+   "outcome": "passed",
+   "duration": 0.0037,
+   "finding": null,
+   "kind": "functional",
+   "params": {
+    "qty": 101
+   },
+   "doc": "What: POST /orders with quantity outside 1..100 (negative, zero, 101, 2^31) must be rejected with 422.\n    Why: negative quantities create negative totals (refund fraud); huge ones overflow stock and totals.\n    Severity: High if broken\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"items\":[{\"product_id\":1,\"quantity\":-1}]}' http://127.0.0.1:8000/orders",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": {
+      "items": [
+       {
+        "product_id": 1,
+        "quantity": 101
+       }
+      ]
+     },
+     "status": 422,
+     "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"items\",0,\"quantity\"],\"msg\":\"Input should be less than or equal to 100\",\"input\":101,\"ctx\":{\"le\":100}}]}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_order_quantity_boundaries_rejected[2147483648]",
+   "name": "test_order_quantity_boundaries_rejected[2147483648]",
+   "outcome": "passed",
+   "duration": 0.0032,
+   "finding": null,
+   "kind": "functional",
+   "params": {
+    "qty": 2147483648
+   },
+   "doc": "What: POST /orders with quantity outside 1..100 (negative, zero, 101, 2^31) must be rejected with 422.\n    Why: negative quantities create negative totals (refund fraud); huge ones overflow stock and totals.\n    Severity: High if broken\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"items\":[{\"product_id\":1,\"quantity\":-1}]}' http://127.0.0.1:8000/orders",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": {
+      "items": [
+       {
+        "product_id": 1,
+        "quantity": 2147483648
+       }
+      ]
+     },
+     "status": 422,
+     "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"items\",0,\"quantity\"],\"msg\":\"Input should be less than or equal to 100\",\"input\":2147483648,\"ctx\":{\"le\":100}}]}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_page_size_boundaries[1-200]",
+   "name": "test_page_size_boundaries[1-200]",
+   "outcome": "passed",
+   "duration": 0.0037,
+   "finding": null,
+   "kind": "functional",
+   "params": {
+    "limit": 1,
+    "expected": 200
+   },
+   "doc": "What: GET /products?limit=N accepts 1..100 and rejects 0, 101 and 1,000,000 with 422.\n    Why: an unbounded page size lets one request dump the table and exhaust memory (API4:2023).\n    Severity: Medium if broken\n    Repro: curl -s -o /dev/null -w '%{http_code}' 'http://127.0.0.1:8000/products?limit=1000000'",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/products?limit=1",
+     "auth": null,
+     "json": null,
+     "status": 200,
+     "body": "[{\"id\":1,\"name\":\"USB-C cable\",\"price\":\"9.99\",\"stock\":120}]"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_page_size_boundaries[100-200]",
+   "name": "test_page_size_boundaries[100-200]",
+   "outcome": "passed",
+   "duration": 0.0039,
+   "finding": null,
+   "kind": "functional",
+   "params": {
+    "limit": 100,
+    "expected": 200
+   },
+   "doc": "What: GET /products?limit=N accepts 1..100 and rejects 0, 101 and 1,000,000 with 422.\n    Why: an unbounded page size lets one request dump the table and exhaust memory (API4:2023).\n    Severity: Medium if broken\n    Repro: curl -s -o /dev/null -w '%{http_code}' 'http://127.0.0.1:8000/products?limit=1000000'",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/products?limit=100",
+     "auth": null,
+     "json": null,
+     "status": 200,
+     "body": "[{\"id\":1,\"name\":\"USB-C cable\",\"price\":\"9.99\",\"stock\":120},{\"id\":2,\"name\":\"Mechanical keyboard\",\"price\":\"49.95\",\"stock\":15},{\"id\":3,\"name\":\"Wireless mouse\",\"price\":\"19.99\",\"stock\":40},{\"id\":4,\"name\":\"Laptop stand\",\"price\":\"34.50\",\"stock\":8}]"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_page_size_boundaries[0-422]",
+   "name": "test_page_size_boundaries[0-422]",
+   "outcome": "passed",
+   "duration": 0.003,
+   "finding": null,
+   "kind": "functional",
+   "params": {
+    "limit": 0,
+    "expected": 422
+   },
+   "doc": "What: GET /products?limit=N accepts 1..100 and rejects 0, 101 and 1,000,000 with 422.\n    Why: an unbounded page size lets one request dump the table and exhaust memory (API4:2023).\n    Severity: Medium if broken\n    Repro: curl -s -o /dev/null -w '%{http_code}' 'http://127.0.0.1:8000/products?limit=1000000'",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/products?limit=0",
+     "auth": null,
+     "json": null,
+     "status": 422,
+     "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"query\",\"limit\"],\"msg\":\"Input should be greater than or equal to 1\",\"input\":\"0\",\"ctx\":{\"ge\":1}}]}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_page_size_boundaries[101-422]",
+   "name": "test_page_size_boundaries[101-422]",
+   "outcome": "passed",
+   "duration": 0.0028,
+   "finding": null,
+   "kind": "functional",
+   "params": {
+    "limit": 101,
+    "expected": 422
+   },
+   "doc": "What: GET /products?limit=N accepts 1..100 and rejects 0, 101 and 1,000,000 with 422.\n    Why: an unbounded page size lets one request dump the table and exhaust memory (API4:2023).\n    Severity: Medium if broken\n    Repro: curl -s -o /dev/null -w '%{http_code}' 'http://127.0.0.1:8000/products?limit=1000000'",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/products?limit=101",
+     "auth": null,
+     "json": null,
+     "status": 422,
+     "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"query\",\"limit\"],\"msg\":\"Input should be less than or equal to 100\",\"input\":\"101\",\"ctx\":{\"le\":100}}]}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_page_size_boundaries[1000000-422]",
+   "name": "test_page_size_boundaries[1000000-422]",
+   "outcome": "passed",
+   "duration": 0.0031,
+   "finding": null,
+   "kind": "functional",
+   "params": {
+    "limit": 1000000,
+    "expected": 422
+   },
+   "doc": "What: GET /products?limit=N accepts 1..100 and rejects 0, 101 and 1,000,000 with 422.\n    Why: an unbounded page size lets one request dump the table and exhaust memory (API4:2023).\n    Severity: Medium if broken\n    Repro: curl -s -o /dev/null -w '%{http_code}' 'http://127.0.0.1:8000/products?limit=1000000'",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/products?limit=1000000",
+     "auth": null,
+     "json": null,
+     "status": 422,
+     "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"query\",\"limit\"],\"msg\":\"Input should be less than or equal to 100\",\"input\":\"1000000\",\"ctx\":{\"le\":100}}]}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_unknown_product_and_coupon",
+   "name": "test_unknown_product_and_coupon",
+   "outcome": "passed",
+   "duration": 0.0096,
+   "finding": null,
+   "kind": "functional",
+   "params": {},
+   "doc": "What: POST /orders with a missing product id -> 404; with an unknown coupon -> 400.\n    Why: silent acceptance of bad input creates orders that cannot be fulfilled or are mispriced.\n    Severity: Medium if broken\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"items\":[{\"product_id\":1,\"quantity\":1}],\"coupon\":\"FREE100\"}' http://127.0.0.1:8000/orders",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": {
+      "items": [
+       {
+        "product_id": 999,
+        "quantity": 1
+       }
+      ]
+     },
+     "status": 404,
+     "body": "{\"detail\":\"product 999 not found\"}"
+    },
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": {
+      "items": [
+       {
+        "product_id": 1,
+        "quantity": 1
+       }
+      ],
+      "coupon": "FREE100"
+     },
+     "status": 400,
+     "body": "{\"detail\":\"unknown coupon\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_invalid_ids_and_tokens",
+   "name": "test_invalid_ids_and_tokens",
+   "outcome": "passed",
+   "duration": 0.0159,
+   "finding": null,
+   "kind": "functional",
+   "params": {},
+   "doc": "What: non-numeric order id -> 422, unknown id -> 404, malformed/unknown bearer token -> 401.\n    Why: consistent error handling avoids stack traces and makes authorization decisions predictable.\n    Severity: Low if broken\n    Repro: curl -s -H 'Authorization: Bearer not-a-token' http://127.0.0.1:8000/orders/1",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/orders/abc",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 422,
+     "body": "{\"detail\":[{\"type\":\"int_parsing\",\"loc\":[\"path\",\"order_id\"],\"msg\":\"Input should be a valid integer, unable to parse string as an integer\",\"input\":\"abc\"}]}"
+    },
+    {
+     "method": "GET",
+     "url": "/orders/999999",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 404,
+     "body": "{\"detail\":\"order not found\"}"
+    },
+    {
+     "method": "GET",
+     "url": "/orders/1",
+     "auth": "Bearer not-a-token",
+     "json": null,
+     "status": 401,
+     "body": "{\"detail\":\"invalid token\"}"
+    },
+    {
+     "method": "GET",
+     "url": "/orders/1",
+     "auth": "Basic YWxpY2U6eA==",
+     "json": null,
+     "status": 401,
+     "body": "{\"detail\":\"missing bearer token\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_functional.py::test_successful_login_returns_token",
+   "name": "test_successful_login_returns_token",
+   "outcome": "passed",
+   "duration": 0.0098,
+   "finding": null,
+   "kind": "functional",
+   "params": {},
+   "doc": "What: POST /login with alice's correct password returns a bearer token that works on /users/me.\n    Why: positive control for the lockout test, so lockout is not \"passing\" because login is simply broken.\n    Severity: High if broken\n    Repro: curl -s -X POST -H 'Content-Type: application/json' -d '{\"username\":\"alice\",\"password\":\"alice-pass-1\"}' http://127.0.0.1:8000/login",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/login",
+     "auth": null,
+     "json": {
+      "username": "alice",
+      "password": "alice-pass-1"
+     },
+     "status": 200,
+     "body": "{\"token\":\"alice-token\",\"token_type\":\"bearer\"}"
+    },
+    {
+     "method": "GET",
+     "url": "/users/me",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 200,
+     "body": "{\"id\":1,\"username\":\"alice\",\"email\":\"alice@example.test\",\"display_name\":\"Alice\",\"role\":\"user\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/products]",
+   "name": "test_permission_matrix[anonymous-GET-/products]",
+   "outcome": "passed",
+   "duration": 0.0042,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "anonymous",
+    "method": "GET",
+    "path": "/products",
+    "body": null,
+    "expected": 200
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/products",
+     "auth": null,
+     "json": null,
+     "status": 200,
+     "body": "[{\"id\":1,\"name\":\"USB-C cable\",\"price\":\"9.99\",\"stock\":120},{\"id\":2,\"name\":\"Mechanical keyboard\",\"price\":\"49.95\",\"stock\":15},{\"id\":3,\"name\":\"Wireless mouse\",\"price\":\"19.99\",\"stock\":40},{\"id\":4,\"name\":\"Laptop stand\",\"price\":\"34.50\",\"stock\":8}]"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/products]",
+   "name": "test_permission_matrix[alice-GET-/products]",
+   "outcome": "passed",
+   "duration": 0.0049,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "alice",
+    "method": "GET",
+    "path": "/products",
+    "body": null,
+    "expected": 200
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/products",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 200,
+     "body": "[{\"id\":1,\"name\":\"USB-C cable\",\"price\":\"9.99\",\"stock\":120},{\"id\":2,\"name\":\"Mechanical keyboard\",\"price\":\"49.95\",\"stock\":15},{\"id\":3,\"name\":\"Wireless mouse\",\"price\":\"19.99\",\"stock\":40},{\"id\":4,\"name\":\"Laptop stand\",\"price\":\"34.50\",\"stock\":8}]"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/users/me]",
+   "name": "test_permission_matrix[anonymous-GET-/users/me]",
+   "outcome": "passed",
+   "duration": 0.0045,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "anonymous",
+    "method": "GET",
+    "path": "/users/me",
+    "body": null,
+    "expected": 401
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/users/me",
+     "auth": null,
+     "json": null,
+     "status": 401,
+     "body": "{\"detail\":\"missing bearer token\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/users/me]",
+   "name": "test_permission_matrix[alice-GET-/users/me]",
+   "outcome": "passed",
+   "duration": 0.0055,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "alice",
+    "method": "GET",
+    "path": "/users/me",
+    "body": null,
+    "expected": 200
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/users/me",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 200,
+     "body": "{\"id\":1,\"username\":\"alice\",\"email\":\"alice@example.test\",\"display_name\":\"Alice\",\"role\":\"user\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-PATCH-/users/me]",
+   "name": "test_permission_matrix[anonymous-PATCH-/users/me]",
+   "outcome": "passed",
+   "duration": 0.0054,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "anonymous",
+    "method": "PATCH",
+    "path": "/users/me",
+    "body": {
+     "display_name": "New Name"
+    },
+    "expected": 401
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "PATCH",
+     "url": "/users/me",
+     "auth": null,
+     "json": {
+      "display_name": "New Name"
+     },
+     "status": 401,
+     "body": "{\"detail\":\"missing bearer token\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-PATCH-/users/me]",
+   "name": "test_permission_matrix[alice-PATCH-/users/me]",
+   "outcome": "passed",
+   "duration": 0.0113,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "alice",
+    "method": "PATCH",
+    "path": "/users/me",
+    "body": {
+     "display_name": "New Name"
+    },
+    "expected": 200
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "PATCH",
+     "url": "/users/me",
+     "auth": "Bearer alice-token",
+     "json": {
+      "display_name": "New Name"
+     },
+     "status": 200,
+     "body": "{\"id\":1,\"username\":\"alice\",\"email\":\"alice@example.test\",\"display_name\":\"New Name\",\"role\":\"user\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/orders]",
+   "name": "test_permission_matrix[anonymous-GET-/orders]",
+   "outcome": "passed",
+   "duration": 0.0063,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "anonymous",
+    "method": "GET",
+    "path": "/orders",
+    "body": null,
+    "expected": 401
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/orders",
+     "auth": null,
+     "json": null,
+     "status": 401,
+     "body": "{\"detail\":\"missing bearer token\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders]",
+   "name": "test_permission_matrix[alice-GET-/orders]",
+   "outcome": "passed",
+   "duration": 0.0046,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "alice",
+    "method": "GET",
+    "path": "/orders",
+    "body": null,
+    "expected": 200
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 200,
+     "body": "[{\"id\":1,\"user_id\":1,\"items\":[{\"product_id\":3,\"name\":\"Wireless mouse\",\"quantity\":2,\"unit_price\":\"19.99\"}],\"coupon\":null,\"subtotal\":\"39.98\",\"discount\":\"0.00\",\"total\":\"39.98\",\"status\":\"paid\"}]"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-POST-/orders]",
+   "name": "test_permission_matrix[anonymous-POST-/orders]",
+   "outcome": "passed",
+   "duration": 0.0044,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "anonymous",
+    "method": "POST",
+    "path": "/orders",
+    "body": {
+     "items": [
+      {
+       "product_id": 1,
+       "quantity": 1
+      }
+     ]
+    },
+    "expected": 401
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": null,
+     "json": {
+      "items": [
+       {
+        "product_id": 1,
+        "quantity": 1
+       }
+      ]
+     },
+     "status": 401,
+     "body": "{\"detail\":\"missing bearer token\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-POST-/orders]",
+   "name": "test_permission_matrix[alice-POST-/orders]",
+   "outcome": "passed",
+   "duration": 0.0042,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "alice",
+    "method": "POST",
+    "path": "/orders",
+    "body": {
+     "items": [
+      {
+       "product_id": 1,
+       "quantity": 1
+      }
+     ]
+    },
+    "expected": 201
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": {
+      "items": [
+       {
+        "product_id": 1,
+        "quantity": 1
+       }
+      ]
+     },
+     "status": 201,
+     "body": "{\"id\":3,\"user_id\":1,\"items\":[{\"product_id\":1,\"name\":\"USB-C cable\",\"quantity\":1,\"unit_price\":\"9.99\"}],\"coupon\":null,\"subtotal\":\"9.99\",\"discount\":\"0.00\",\"total\":\"9.99\",\"status\":\"pending\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/orders/1]",
+   "name": "test_permission_matrix[anonymous-GET-/orders/1]",
+   "outcome": "passed",
+   "duration": 0.0046,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "anonymous",
+    "method": "GET",
+    "path": "/orders/1",
+    "body": null,
+    "expected": 401
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/orders/1",
+     "auth": null,
+     "json": null,
+     "status": 401,
+     "body": "{\"detail\":\"missing bearer token\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders/1]",
+   "name": "test_permission_matrix[alice-GET-/orders/1]",
+   "outcome": "passed",
+   "duration": 0.004,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "alice",
+    "method": "GET",
+    "path": "/orders/1",
+    "body": null,
+    "expected": 200
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/orders/1",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 200,
+     "body": "{\"id\":1,\"user_id\":1,\"items\":[{\"product_id\":3,\"name\":\"Wireless mouse\",\"quantity\":2,\"unit_price\":\"19.99\"}],\"coupon\":null,\"subtotal\":\"39.98\",\"discount\":\"0.00\",\"total\":\"39.98\",\"status\":\"paid\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/orders/1]",
+   "name": "test_permission_matrix[bob-GET-/orders/1]",
+   "outcome": "passed",
+   "duration": 0.0046,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "bob",
+    "method": "GET",
+    "path": "/orders/1",
+    "body": null,
+    "expected": 404
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/orders/1",
+     "auth": "Bearer bob-token",
+     "json": null,
+     "status": 404,
+     "body": "{\"detail\":\"order not found\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders/2]",
+   "name": "test_permission_matrix[alice-GET-/orders/2]",
+   "outcome": "passed",
+   "duration": 0.0042,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "alice",
+    "method": "GET",
+    "path": "/orders/2",
+    "body": null,
+    "expected": 404
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/orders/2",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 404,
+     "body": "{\"detail\":\"order not found\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[admin-GET-/orders/1]",
+   "name": "test_permission_matrix[admin-GET-/orders/1]",
+   "outcome": "passed",
+   "duration": 0.0047,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "admin",
+    "method": "GET",
+    "path": "/orders/1",
+    "body": null,
+    "expected": 200
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/orders/1",
+     "auth": "Bearer admin-token",
+     "json": null,
+     "status": 200,
+     "body": "{\"id\":1,\"user_id\":1,\"items\":[{\"product_id\":3,\"name\":\"Wireless mouse\",\"quantity\":2,\"unit_price\":\"19.99\"}],\"coupon\":null,\"subtotal\":\"39.98\",\"discount\":\"0.00\",\"total\":\"39.98\",\"status\":\"paid\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/admin/users]",
+   "name": "test_permission_matrix[anonymous-GET-/admin/users]",
+   "outcome": "passed",
+   "duration": 0.0038,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "anonymous",
+    "method": "GET",
+    "path": "/admin/users",
+    "body": null,
+    "expected": 401
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/admin/users",
+     "auth": null,
+     "json": null,
+     "status": 401,
+     "body": "{\"detail\":\"missing bearer token\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/admin/users]",
+   "name": "test_permission_matrix[alice-GET-/admin/users]",
+   "outcome": "passed",
+   "duration": 0.0037,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "alice",
+    "method": "GET",
+    "path": "/admin/users",
+    "body": null,
+    "expected": 403
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/admin/users",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 403,
+     "body": "{\"detail\":\"admin role required\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/admin/users]",
+   "name": "test_permission_matrix[bob-GET-/admin/users]",
+   "outcome": "passed",
+   "duration": 0.0044,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "bob",
+    "method": "GET",
+    "path": "/admin/users",
+    "body": null,
+    "expected": 403
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/admin/users",
+     "auth": "Bearer bob-token",
+     "json": null,
+     "status": 403,
+     "body": "{\"detail\":\"admin role required\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[admin-GET-/admin/users]",
+   "name": "test_permission_matrix[admin-GET-/admin/users]",
+   "outcome": "passed",
+   "duration": 0.0041,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "admin",
+    "method": "GET",
+    "path": "/admin/users",
+    "body": null,
+    "expected": 200
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/admin/users",
+     "auth": "Bearer admin-token",
+     "json": null,
+     "status": 200,
+     "body": "[{\"id\":1,\"username\":\"alice\",\"email\":\"alice@example.test\",\"display_name\":\"Alice\",\"role\":\"user\"},{\"id\":2,\"username\":\"bob\",\"email\":\"bob@example.test\",\"display_name\":\"Bob\",\"role\":\"user\"},{\"id\":3,\"username\":\"admin\",\"email\":\"admin@example.test\",\"display_name\":\"Admin\",\"role\":\"admin\"}]"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[anonymous-POST-/admin/products]",
+   "name": "test_permission_matrix[anonymous-POST-/admin/products]",
+   "outcome": "passed",
+   "duration": 0.0034,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "anonymous",
+    "method": "POST",
+    "path": "/admin/products",
+    "body": {
+     "name": "Test product",
+     "price": "1.00",
+     "stock": 1
+    },
+    "expected": 401
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/admin/products",
+     "auth": null,
+     "json": {
+      "name": "Test product",
+      "price": "1.00",
+      "stock": 1
+     },
+     "status": 401,
+     "body": "{\"detail\":\"missing bearer token\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[alice-POST-/admin/products]",
+   "name": "test_permission_matrix[alice-POST-/admin/products]",
+   "outcome": "passed",
+   "duration": 0.0043,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "alice",
+    "method": "POST",
+    "path": "/admin/products",
+    "body": {
+     "name": "Test product",
+     "price": "1.00",
+     "stock": 1
+    },
+    "expected": 403
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/admin/products",
+     "auth": "Bearer alice-token",
+     "json": {
+      "name": "Test product",
+      "price": "1.00",
+      "stock": 1
+     },
+     "status": 403,
+     "body": "{\"detail\":\"admin role required\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_permission_matrix.py::test_permission_matrix[admin-POST-/admin/products]",
+   "name": "test_permission_matrix[admin-POST-/admin/products]",
+   "outcome": "passed",
+   "duration": 0.0039,
+   "finding": null,
+   "kind": "matrix",
+   "params": {
+    "role": "admin",
+    "method": "POST",
+    "path": "/admin/products",
+    "body": {
+     "name": "Test product",
+     "price": "1.00",
+     "stock": 1
+    },
+    "expected": 201
+   },
+   "doc": "What: one cell of the role x endpoint permission matrix (tests/permission_matrix.py).\n    Why: broken access control is the #1 API risk (OWASP API1/API5 2023); every role/endpoint pair is checked, not just the obvious ones.\n    Severity: depends on the row (an unexpected 2xx on an admin or foreign-object route is High/Critical).\n    Repro: curl -s -o /dev/null -w '%{http_code}' -X <METHOD> -H 'Authorization: Bearer <role>-token' http://127.0.0.1:8000<path>",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/admin/products",
+     "auth": "Bearer admin-token",
+     "json": {
+      "name": "Test product",
+      "price": "1.00",
+      "stock": 1
+     },
+     "status": 201,
+     "body": "{\"id\":5,\"name\":\"Test product\",\"price\":\"1.00\",\"stock\":1}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_bola_user_cannot_read_other_users_order",
+   "name": "test_bola_user_cannot_read_other_users_order",
+   "outcome": "passed",
+   "duration": 0.0036,
+   "finding": {
+    "id": "F1",
+    "severity": "High",
+    "owasp": "API1:2023 Broken Object Level Authorization"
+   },
+   "kind": "finding",
+   "params": {},
+   "doc": "What: bob requests GET /orders/1, which belongs to alice.\n    Why: object IDs are sequential, so any customer could read every order (names, items, totals) by counting upward.\n    Severity: High\n    Repro: curl -s -H 'Authorization: Bearer bob-token' http://127.0.0.1:8000/orders/1",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/orders/1",
+     "auth": "Bearer bob-token",
+     "json": null,
+     "status": 404,
+     "body": "{\"detail\":\"order not found\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_bfla_normal_user_cannot_list_all_users",
+   "name": "test_bfla_normal_user_cannot_list_all_users",
+   "outcome": "passed",
+   "duration": 0.0033,
+   "finding": {
+    "id": "F2",
+    "severity": "Critical",
+    "owasp": "API5:2023 Broken Function Level Authorization"
+   },
+   "kind": "finding",
+   "params": {},
+   "doc": "What: alice (role=user) calls the admin-only GET /admin/users.\n    Why: the admin route only checks that a token is valid, not the role, so every customer gets the full user list.\n    Severity: Critical\n    Repro: curl -s -H 'Authorization: Bearer alice-token' http://127.0.0.1:8000/admin/users",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/admin/users",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 403,
+     "body": "{\"detail\":\"admin role required\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_bfla_normal_user_cannot_create_products",
+   "name": "test_bfla_normal_user_cannot_create_products",
+   "outcome": "passed",
+   "duration": 0.0045,
+   "finding": {
+    "id": "F2",
+    "severity": "Critical",
+    "owasp": "API5:2023 Broken Function Level Authorization"
+   },
+   "kind": "finding",
+   "params": {},
+   "doc": "What: alice (role=user) calls the admin-only POST /admin/products.\n    Why: write access to the catalog lets any customer add or price products.\n    Severity: Critical\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"name\":\"x\",\"price\":\"0.01\",\"stock\":1}' http://127.0.0.1:8000/admin/products",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/admin/products",
+     "auth": "Bearer alice-token",
+     "json": {
+      "name": "x",
+      "price": "0.01",
+      "stock": 1
+     },
+     "status": 403,
+     "body": "{\"detail\":\"admin role required\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_mass_assignment_cannot_set_role",
+   "name": "test_mass_assignment_cannot_set_role",
+   "outcome": "passed",
+   "duration": 0.009,
+   "finding": {
+    "id": "F3",
+    "severity": "Critical",
+    "owasp": "API3:2023 Broken Object Property Level Authorization (mass assignment)"
+   },
+   "kind": "finding",
+   "params": {},
+   "doc": "What: alice sends PATCH /users/me with {\"role\": \"admin\"}.\n    Why: if the server copies every client field into the record, any user can promote themselves to admin.\n    Severity: Critical\n    Repro: curl -s -X PATCH -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"role\":\"admin\"}' http://127.0.0.1:8000/users/me",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "PATCH",
+     "url": "/users/me",
+     "auth": "Bearer alice-token",
+     "json": {
+      "role": "admin"
+     },
+     "status": 422,
+     "body": "{\"detail\":\"fields not allowed: role\"}"
+    },
+    {
+     "method": "GET",
+     "url": "/users/me",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 200,
+     "body": "{\"id\":1,\"username\":\"alice\",\"email\":\"alice@example.test\",\"display_name\":\"Alice\",\"role\":\"user\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_sqli_union_in_product_search",
+   "name": "test_sqli_union_in_product_search",
+   "outcome": "passed",
+   "duration": 0.0036,
+   "finding": {
+    "id": "F4",
+    "severity": "Critical",
+    "owasp": "Injection (OWASP Top 10 A03:2021; API8:2023 Security Misconfiguration)"
+   },
+   "kind": "finding",
+   "params": {},
+   "doc": "What: GET /products?search= with a UNION SELECT payload that targets the users table.\n    Why: the search string is pasted into SQL, so an anonymous caller can read any table (here: usernames and password hashes).\n    Severity: Critical\n    Repro: curl -s -G http://127.0.0.1:8000/products --data-urlencode \"search=zzz' UNION SELECT id, username || ':' || password_hash, 0, 0 FROM users--\"",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/products?search=zzz%27+UNION+SELECT+id%2C+username+%7C%7C+%27%3A%27+%7C%7C+password_hash%2C+0%2C+0+FROM+users--",
+     "auth": null,
+     "json": null,
+     "status": 200,
+     "body": "[]"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_sqli_quote_in_search_is_handled",
+   "name": "test_sqli_quote_in_search_is_handled",
+   "outcome": "passed",
+   "duration": 0.0038,
+   "finding": {
+    "id": "F4",
+    "severity": "Critical",
+    "owasp": "Injection (OWASP Top 10 A03:2021; API8:2023 Security Misconfiguration)"
+   },
+   "kind": "finding",
+   "params": {},
+   "doc": "What: GET /products?search=O'Reilly (a normal apostrophe).\n    Why: a 500 with a raw database error on a quote is the classic sign of string-built SQL, and it leaks internals.\n    Severity: Critical (same root cause as the UNION test)\n    Repro: curl -s -G http://127.0.0.1:8000/products --data-urlencode \"search=O'Reilly\"",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/products?search=O%27Reilly",
+     "auth": null,
+     "json": null,
+     "status": 200,
+     "body": "[]"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_profile_does_not_expose_password_hash",
+   "name": "test_profile_does_not_expose_password_hash",
+   "outcome": "passed",
+   "duration": 0.0036,
+   "finding": {
+    "id": "F5",
+    "severity": "Medium",
+    "owasp": "API3:2023 Broken Object Property Level Authorization (excessive data exposure)"
+   },
+   "kind": "finding",
+   "params": {},
+   "doc": "What: GET /users/me as alice; the response must not contain credential fields.\n    Why: password hashes in API responses end up in browser caches, logs and analytics, and can be cracked offline.\n    Severity: Medium\n    Repro: curl -s -H 'Authorization: Bearer alice-token' http://127.0.0.1:8000/users/me",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/users/me",
+     "auth": "Bearer alice-token",
+     "json": null,
+     "status": 200,
+     "body": "{\"id\":1,\"username\":\"alice\",\"email\":\"alice@example.test\",\"display_name\":\"Alice\",\"role\":\"user\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_admin_user_list_does_not_expose_password_hash",
+   "name": "test_admin_user_list_does_not_expose_password_hash",
+   "outcome": "passed",
+   "duration": 0.0033,
+   "finding": {
+    "id": "F5",
+    "severity": "Medium",
+    "owasp": "API3:2023 Broken Object Property Level Authorization (excessive data exposure)"
+   },
+   "kind": "finding",
+   "params": {},
+   "doc": "What: GET /admin/users as admin; even admins must not receive password hashes.\n    Why: the admin UI never needs them; leaking them widens the blast radius of any admin-session compromise.\n    Severity: Medium\n    Repro: curl -s -H 'Authorization: Bearer admin-token' http://127.0.0.1:8000/admin/users",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "GET",
+     "url": "/admin/users",
+     "auth": "Bearer admin-token",
+     "json": null,
+     "status": 200,
+     "body": "[{\"id\":1,\"username\":\"alice\",\"email\":\"alice@example.test\",\"display_name\":\"Alice\",\"role\":\"user\"},{\"id\":2,\"username\":\"bob\",\"email\":\"bob@example.test\",\"display_name\":\"Bob\",\"role\":\"user\"},{\"id\":3,\"username\":\"admin\",\"email\":\"admin@example.test\",\"display_name\":\"Admin\",\"role\":\"admin\"}]"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[3x-cable]",
+   "name": "test_order_total_with_coupon_matches_spec[3x-cable]",
+   "outcome": "passed",
+   "duration": 0.0042,
+   "finding": {
+    "id": "F6",
+    "severity": "High",
+    "owasp": "Data accuracy (business logic) - pricing spec section 'Money'"
+   },
+   "kind": "finding",
+   "params": {
+    "items": [
+     {
+      "product_id": 1,
+      "quantity": 3
+     }
+    ],
+    "lines": [
+     [
+      "9.99",
+      3
+     ]
+    ]
+   },
+   "doc": "What: POST /orders with coupon SAVE10; compare total with the spec (10% off subtotal once, half-up).\n    Why: wrong totals mean customers are over/under-charged on every discounted order, a direct revenue and compliance problem.\n    Severity: High\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"items\":[{\"product_id\":1,\"quantity\":3}],\"coupon\":\"SAVE10\"}' http://127.0.0.1:8000/orders",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": {
+      "items": [
+       {
+        "product_id": 1,
+        "quantity": 3
+       }
+      ],
+      "coupon": "SAVE10"
+     },
+     "status": 201,
+     "body": "{\"id\":3,\"user_id\":1,\"items\":[{\"product_id\":1,\"name\":\"USB-C cable\",\"quantity\":3,\"unit_price\":\"9.99\"}],\"coupon\":\"SAVE10\",\"subtotal\":\"29.97\",\"discount\":\"3.00\",\"total\":\"26.97\",\"status\":\"pending\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[mixed-cart]",
+   "name": "test_order_total_with_coupon_matches_spec[mixed-cart]",
+   "outcome": "passed",
+   "duration": 0.0045,
+   "finding": {
+    "id": "F6",
+    "severity": "High",
+    "owasp": "Data accuracy (business logic) - pricing spec section 'Money'"
+   },
+   "kind": "finding",
+   "params": {
+    "items": [
+     {
+      "product_id": 3,
+      "quantity": 2
+     },
+     {
+      "product_id": 1,
+      "quantity": 1
+     }
+    ],
+    "lines": [
+     [
+      "19.99",
+      2
+     ],
+     [
+      "9.99",
+      1
+     ]
+    ]
+   },
+   "doc": "What: POST /orders with coupon SAVE10; compare total with the spec (10% off subtotal once, half-up).\n    Why: wrong totals mean customers are over/under-charged on every discounted order, a direct revenue and compliance problem.\n    Severity: High\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"items\":[{\"product_id\":1,\"quantity\":3}],\"coupon\":\"SAVE10\"}' http://127.0.0.1:8000/orders",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": {
+      "items": [
+       {
+        "product_id": 3,
+        "quantity": 2
+       },
+       {
+        "product_id": 1,
+        "quantity": 1
+       }
+      ],
+      "coupon": "SAVE10"
+     },
+     "status": 201,
+     "body": "{\"id\":3,\"user_id\":1,\"items\":[{\"product_id\":3,\"name\":\"Wireless mouse\",\"quantity\":2,\"unit_price\":\"19.99\"},{\"product_id\":1,\"name\":\"USB-C cable\",\"quantity\":1,\"unit_price\":\"9.99\"}],\"coupon\":\"SAVE10\",\"subtotal\":\"49.97\",\"discount\":\"5.00\",\"total\":\"44.97\",\"status\":\"pending\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[keyboard-half-cent]",
+   "name": "test_order_total_with_coupon_matches_spec[keyboard-half-cent]",
+   "outcome": "passed",
+   "duration": 0.0044,
+   "finding": {
+    "id": "F6",
+    "severity": "High",
+    "owasp": "Data accuracy (business logic) - pricing spec section 'Money'"
+   },
+   "kind": "finding",
+   "params": {
+    "items": [
+     {
+      "product_id": 2,
+      "quantity": 1
+     }
+    ],
+    "lines": [
+     [
+      "49.95",
+      1
+     ]
+    ]
+   },
+   "doc": "What: POST /orders with coupon SAVE10; compare total with the spec (10% off subtotal once, half-up).\n    Why: wrong totals mean customers are over/under-charged on every discounted order, a direct revenue and compliance problem.\n    Severity: High\n    Repro: curl -s -X POST -H 'Authorization: Bearer alice-token' -H 'Content-Type: application/json' -d '{\"items\":[{\"product_id\":1,\"quantity\":3}],\"coupon\":\"SAVE10\"}' http://127.0.0.1:8000/orders",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/orders",
+     "auth": "Bearer alice-token",
+     "json": {
+      "items": [
+       {
+        "product_id": 2,
+        "quantity": 1
+       }
+      ],
+      "coupon": "SAVE10"
+     },
+     "status": 201,
+     "body": "{\"id\":3,\"user_id\":1,\"items\":[{\"product_id\":2,\"name\":\"Mechanical keyboard\",\"quantity\":1,\"unit_price\":\"49.95\"}],\"coupon\":\"SAVE10\",\"subtotal\":\"49.95\",\"discount\":\"5.00\",\"total\":\"44.95\",\"status\":\"pending\"}"
+    }
+   ]
+  },
+  {
+   "nodeid": "tests/test_security_findings.py::test_login_locks_after_repeated_failures",
+   "name": "test_login_locks_after_repeated_failures",
+   "outcome": "passed",
+   "duration": 0.0355,
+   "finding": {
+    "id": "F7",
+    "severity": "Medium",
+    "owasp": "API4:2023 Unrestricted Resource Consumption (no login throttling)"
+   },
+   "kind": "finding",
+   "params": {},
+   "doc": "What: 10 wrong passwords for alice on POST /login; from the 6th attempt the API must answer 429.\n    Why: without throttling an attacker can guess passwords at full speed (credential stuffing / brute force).\n    Severity: Medium\n    Repro: for i in $(seq 1 10); do curl -s -o /dev/null -w '%{http_code} ' -X POST -H 'Content-Type: application/json' -d '{\"username\":\"alice\",\"password\":\"wrong'$i'\"}' http://127.0.0.1:8000/login; done",
+   "message": "",
+   "exchanges": [
+    {
+     "method": "POST",
+     "url": "/login",
+     "auth": null,
+     "json": {
+      "username": "alice",
+      "password": "wrong1"
+     },
+     "status": 401,
+     "body": "{\"detail\":\"invalid credentials\"}"
+    },
+    {
+     "method": "POST",
+     "url": "/login",
+     "auth": null,
+     "json": {
+      "username": "alice",
+      "password": "wrong2"
+     },
+     "status": 401,
+     "body": "{\"detail\":\"invalid credentials\"}"
+    },
+    {
+     "method": "POST",
+     "url": "/login",
+     "auth": null,
+     "json": {
+      "username": "alice",
+      "password": "wrong3"
+     },
+     "status": 401,
+     "body": "{\"detail\":\"invalid credentials\"}"
+    },
+    {
+     "method": "POST",
+     "url": "/login",
+     "auth": null,
+     "json": {
+      "username": "alice",
+      "password": "wrong4"
+     },
+     "status": 401,
+     "body": "{\"detail\":\"invalid credentials\"}"
+    },
+    {
+     "method": "POST",
+     "url": "/login",
+     "auth": null,
+     "json": {
+      "username": "alice",
+      "password": "wrong5"
+     },
+     "status": 401,
+     "body": "{\"detail\":\"invalid credentials\"}"
+    },
+    {
+     "method": "POST",
+     "url": "/login",
+     "auth": null,
+     "json": {
+      "username": "alice",
+      "password": "wrong6"
+     },
+     "status": 429,
+     "body": "{\"detail\":\"too many failed attempts; try again later\"}"
+    },
+    {
+     "method": "POST",
+     "url": "/login",
+     "auth": null,
+     "json": {
+      "username": "alice",
+      "password": "wrong7"
+     },
+     "status": 429,
+     "body": "{\"detail\":\"too many failed attempts; try again later\"}"
+    },
+    {
+     "method": "POST",
+     "url": "/login",
+     "auth": null,
+     "json": {
+      "username": "alice",
+      "password": "wrong8"
+     },
+     "status": 429,
+     "body": "{\"detail\":\"too many failed attempts; try again later\"}"
+    },
+    {
+     "method": "POST",
+     "url": "/login",
+     "auth": null,
+     "json": {
+      "username": "alice",
+      "password": "wrong9"
+     },
+     "status": 429,
+     "body": "{\"detail\":\"too many failed attempts; try again later\"}"
+    },
+    {
+     "method": "POST",
+     "url": "/login",
+     "auth": null,
+     "json": {
+      "username": "alice",
+      "password": "wrong10"
+     },
+     "status": 429,
+     "body": "{\"detail\":\"too many failed attempts; try again later\"}"
+    }
+   ]
+  }
+ ]
+}

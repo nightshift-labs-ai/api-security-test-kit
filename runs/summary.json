@@ -1,0 +1,17 @@
+{
+ "tests_total": 49,
+ "vulnerable_failed": 17,
+ "fixed_failed": 0,
+ "findings_open_vulnerable": 7,
+ "findings_open_fixed": 0,
+ "by_severity": {
+  "Critical": 3,
+  "High": 2,
+  "Medium": 2,
+  "Low": 0
+ },
+ "runtime_s": {
+  "vulnerable": 0.76,
+  "fixed": 0.8
+ }
+}

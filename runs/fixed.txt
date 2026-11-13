@@ -1,0 +1,60 @@
+# mode=fixed DEMO_FIXED=1 cmd: pytest -v -rf --tb=line  (2026-11-13 21:13:53)
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /home/agent/tools/apisec-venv/bin/python
+rootdir: /home/agent/claude-money/projects/client-jobs/api-sectest-kit
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.16.0
+collecting ... collected 49 items
+
+tests/test_functional.py::test_products_schema_and_types PASSED          [  2%]
+tests/test_functional.py::test_order_schema_and_types PASSED             [  4%]
+tests/test_functional.py::test_order_total_without_coupon PASSED         [  6%]
+tests/test_functional.py::test_order_quantity_boundaries_rejected[-1] PASSED [  8%]
+tests/test_functional.py::test_order_quantity_boundaries_rejected[0] PASSED [ 10%]
+tests/test_functional.py::test_order_quantity_boundaries_rejected[101] PASSED [ 12%]
+tests/test_functional.py::test_order_quantity_boundaries_rejected[2147483648] PASSED [ 14%]
+tests/test_functional.py::test_page_size_boundaries[1-200] PASSED        [ 16%]
+tests/test_functional.py::test_page_size_boundaries[100-200] PASSED      [ 18%]
+tests/test_functional.py::test_page_size_boundaries[0-422] PASSED        [ 20%]
+tests/test_functional.py::test_page_size_boundaries[101-422] PASSED      [ 22%]
+tests/test_functional.py::test_page_size_boundaries[1000000-422] PASSED  [ 24%]
+tests/test_functional.py::test_unknown_product_and_coupon PASSED         [ 26%]
+tests/test_functional.py::test_invalid_ids_and_tokens PASSED             [ 28%]
+tests/test_functional.py::test_successful_login_returns_token PASSED     [ 30%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/products] PASSED [ 32%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/products] PASSED [ 34%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/users/me] PASSED [ 36%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/users/me] PASSED [ 38%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-PATCH-/users/me] PASSED [ 40%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-PATCH-/users/me] PASSED [ 42%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/orders] PASSED [ 44%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders] PASSED [ 46%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-POST-/orders] PASSED [ 48%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-POST-/orders] PASSED [ 51%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/orders/1] PASSED [ 53%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders/1] PASSED [ 55%]
+tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/orders/1] PASSED [ 57%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/orders/2] PASSED [ 59%]
+tests/test_permission_matrix.py::test_permission_matrix[admin-GET-/orders/1] PASSED [ 61%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-GET-/admin/users] PASSED [ 63%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-GET-/admin/users] PASSED [ 65%]
+tests/test_permission_matrix.py::test_permission_matrix[bob-GET-/admin/users] PASSED [ 67%]
+tests/test_permission_matrix.py::test_permission_matrix[admin-GET-/admin/users] PASSED [ 69%]
+tests/test_permission_matrix.py::test_permission_matrix[anonymous-POST-/admin/products] PASSED [ 71%]
+tests/test_permission_matrix.py::test_permission_matrix[alice-POST-/admin/products] PASSED [ 73%]
+tests/test_permission_matrix.py::test_permission_matrix[admin-POST-/admin/products] PASSED [ 75%]
+tests/test_security_findings.py::test_bola_user_cannot_read_other_users_order PASSED [ 77%]
+tests/test_security_findings.py::test_bfla_normal_user_cannot_list_all_users PASSED [ 79%]
+tests/test_security_findings.py::test_bfla_normal_user_cannot_create_products PASSED [ 81%]
+tests/test_security_findings.py::test_mass_assignment_cannot_set_role PASSED [ 83%]
+tests/test_security_findings.py::test_sqli_union_in_product_search PASSED [ 85%]
+tests/test_security_findings.py::test_sqli_quote_in_search_is_handled PASSED [ 87%]
+tests/test_security_findings.py::test_profile_does_not_expose_password_hash PASSED [ 89%]
+tests/test_security_findings.py::test_admin_user_list_does_not_expose_password_hash PASSED [ 91%]
+tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[3x-cable] PASSED [ 93%]
+tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[mixed-cart] PASSED [ 95%]
+tests/test_security_findings.py::test_order_total_with_coupon_matches_spec[keyboard-half-cent] PASSED [ 97%]
+tests/test_security_findings.py::test_login_locks_after_repeated_failures PASSED [100%]
+
+============================== 49 passed in 0.79s ==============================
